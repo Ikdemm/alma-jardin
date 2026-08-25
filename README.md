@@ -61,6 +61,24 @@ npm run docker:down    # Stop MongoDB
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/api/health` | Service and MongoDB connectivity status |
+| POST | `/api/auth/login` | Admin login (email + password) |
+| GET | `/api/auth/me` | Current authenticated admin profile |
+| POST | `/api/auth/forgot-password` | Request password reset token |
+| POST | `/api/auth/reset-password` | Reset password with token |
+| GET | `/api/admins` | List administrators (requires `admins.read`) |
+| POST | `/api/admins` | Create administrator (requires `admins.create`) |
+| GET | `/api/roles` | List roles (requires `roles.read`) |
+| POST | `/api/roles` | Create role (requires `roles.create`) |
+| GET | `/api/roles/permissions/catalog` | Permission catalog |
+
+## Admin panel
+
+- Login: `http://localhost:4200/admin/login`
+- Default super admin (seeded on empty database):
+  - Email: `admin@almajardin.com`
+  - Password: `Admin1234!`
+
+RBAC includes granular permissions per module (`read`, `create`, `update`, `delete`) and a seeded **Editor** role for content management.
 
 ## Requirements
 

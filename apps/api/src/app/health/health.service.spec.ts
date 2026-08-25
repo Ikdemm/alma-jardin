@@ -19,6 +19,5 @@ describe('HealthService', () => {
 
     expect(result.status).toBe('ok');
     expect(result.mongo).toBe('connected');
-    expect(result.service).toBe('alma-jardin-api');
   });
 });

@@ -24,6 +24,10 @@
         "name": "next"
       }
     ],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@alma-jardin/shared": ["../../libs/shared/src/index.ts"]
+    },
     "types": [
       "jest",
       "node"
