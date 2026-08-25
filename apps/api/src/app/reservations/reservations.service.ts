@@ -38,7 +38,10 @@ export class ReservationsService {
     });
 
     const publicReservation = this.toPublic(reservation);
-    await this.notifyStaffNewReservation(publicReservation);
+    await Promise.all([
+      this.notifyStaffNewReservation(publicReservation),
+      this.pushAdminsNewReservation(publicReservation),
+    ]);
     return publicReservation;
   }
 
@@ -94,9 +97,7 @@ export class ReservationsService {
       return;
     }
 
-    const text = [
-      'Nueva solicitud de reserva en Alma Jardín',
-      '',
+    const lines = [
       `Nombre: ${reservation.contactName}`,
       `Teléfono: ${reservation.contactPhone}`,
       reservation.contactEmail ? `Correo: ${reservation.contactEmail}` : null,
@@ -104,16 +105,25 @@ export class ReservationsService {
       `Hora: ${reservation.time}`,
       `Personas: ${reservation.pax}`,
       reservation.notes ? `Notas: ${reservation.notes}` : null,
-      '',
       'Revisa el panel administrativo para confirmar o rechazar.',
-    ]
-      .filter(Boolean)
-      .join('\n');
+    ].filter(Boolean) as string[];
+
+    const text = ['Nueva solicitud de reserva en Alma Jardín', '', ...lines].join('\n');
 
     await this.notifications.sendMail({
       to,
       subject: `[Alma Jardín] Nueva reserva — ${reservation.contactName}`,
       text,
+      html: this.notifications.buildEmailHtml('Nueva reserva', lines),
+    });
+  }
+
+  private async pushAdminsNewReservation(reservation: ReservationPublic) {
+    await this.notifications.notifyAdmins({
+      title: 'Nueva reserva',
+      body: `${reservation.contactName} · ${reservation.date} ${reservation.time} · ${reservation.pax} personas`,
+      url: '/admin/reservations',
+      tag: `reservation-${reservation.id}`,
     });
   }
 
@@ -123,29 +133,20 @@ export class ReservationsService {
     }
 
     const settings = await this.settingsService.getPublic();
-    const whatsappHint = settings.whatsappPhone
-      ? `\n\nWhatsApp: https://wa.me/${settings.whatsappPhone}`
-      : '';
-
-    const text = [
+    const lines = [
       `Hola ${reservation.contactName},`,
-      '',
       `Tu reserva en ${settings.name} ha sido confirmada.`,
-      '',
       `Fecha: ${reservation.date}`,
       `Hora: ${reservation.time}`,
       `Personas: ${reservation.pax}`,
-      '',
       `Te esperamos en ${settings.address}.`,
-      whatsappHint,
-    ]
-      .filter(Boolean)
-      .join('\n');
+    ];
 
     await this.notifications.sendMail({
       to: reservation.contactEmail,
       subject: `Reserva confirmada — ${settings.name}`,
-      text,
+      text: lines.join('\n\n'),
+      html: this.notifications.buildEmailHtml('Reserva confirmada', lines),
     });
   }
 

@@ -35,7 +35,10 @@ export class ContactService {
     });
 
     const publicMessage = this.toPublic(message);
-    await this.notifyStaff(publicMessage);
+    await Promise.all([
+      this.notifyStaff(publicMessage),
+      this.pushAdminsNewContact(publicMessage),
+    ]);
     return publicMessage;
   }
 
@@ -75,23 +78,28 @@ export class ContactService {
       return;
     }
 
-    const text = [
-      'Nuevo mensaje de contacto en Alma Jardín',
-      '',
+    const lines = [
       `Nombre: ${message.name}`,
       `Correo: ${message.email}`,
       message.phone ? `Teléfono: ${message.phone}` : null,
       `Asunto: ${message.subject}`,
-      '',
       message.message,
-    ]
-      .filter(Boolean)
-      .join('\n');
+    ].filter(Boolean) as string[];
 
     await this.notifications.sendMail({
       to,
       subject: `[Alma Jardín] Contacto: ${message.subject}`,
-      text,
+      text: ['Nuevo mensaje de contacto en Alma Jardín', '', ...lines].join('\n'),
+      html: this.notifications.buildEmailHtml('Nuevo mensaje de contacto', lines),
+    });
+  }
+
+  private async pushAdminsNewContact(message: ContactMessagePublic) {
+    await this.notifications.notifyAdmins({
+      title: 'Nuevo mensaje de contacto',
+      body: `${message.name}: ${message.subject}`,
+      url: '/admin/contact',
+      tag: `contact-${message.id}`,
     });
   }
 

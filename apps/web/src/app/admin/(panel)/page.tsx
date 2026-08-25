@@ -1,5 +1,6 @@
 import { requireAdminSession } from '@/lib/auth-server';
 import { hasPermission } from '@alma-jardin/shared';
+import { AdminPushOptIn } from '@/components/admin/admin-push-opt-in';
 
 export default async function AdminDashboardPage() {
   const admin = await requireAdminSession();
@@ -18,10 +19,18 @@ export default async function AdminDashboardPage() {
           {hasPermission(admin, 'roles.read') ? 'acceso permitido' : 'sin acceso'}
         </li>
         <li>
+          Reservas:{' '}
+          {hasPermission(admin, 'reservations.read')
+            ? 'acceso permitido'
+            : 'sin acceso'}
+        </li>
+        <li>
           Permisos efectivos:{' '}
           {admin.isSuperAdmin ? 'todos' : admin.permissions.length}
         </li>
       </ul>
+
+      <AdminPushOptIn />
     </section>
   );
 }
