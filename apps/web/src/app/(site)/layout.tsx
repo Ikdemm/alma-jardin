@@ -2,6 +2,7 @@ import { Cormorant_Garamond, DM_Sans } from 'next/font/google';
 import { getPublicSettings } from '@/lib/public-api';
 import { SiteFooter } from '@/components/site/site-footer';
 import { SiteHeader } from '@/components/site/site-header';
+import { WhatsAppFloat } from '@/components/site/whatsapp-float';
 import styles from './site.module.css';
 
 const display = Cormorant_Garamond({
@@ -29,6 +30,7 @@ export default async function SiteLayout({
       <SiteHeader siteName={siteName} />
       <main className={styles.main}>{children}</main>
       {settings ? <SiteFooter settings={settings} /> : null}
+      {settings ? <WhatsAppFloat settings={settings} /> : null}
     </div>
   );
 }

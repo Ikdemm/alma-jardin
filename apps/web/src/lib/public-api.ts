@@ -1,9 +1,11 @@
 import type {
+  CreateContactInput,
   CreateReservationInput,
   MenuCategoryPublic,
   MenuItemPublic,
   ReservationPublic,
   RestaurantSettingsPublic,
+  ContactMessagePublic,
 } from '@alma-jardin/shared';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3333/api';
@@ -45,8 +47,18 @@ export function getFeaturedItems(): Promise<MenuItemPublic[] | null> {
 export async function createReservation(
   input: CreateReservationInput,
 ): Promise<{ data?: ReservationPublic; error?: string }> {
+  return postPublic<ReservationPublic>('/reservations', input);
+}
+
+export async function createContactMessage(
+  input: CreateContactInput,
+): Promise<{ data?: ContactMessagePublic; error?: string }> {
+  return postPublic<ContactMessagePublic>('/contact', input);
+}
+
+async function postPublic<T>(path: string, input: unknown): Promise<{ data?: T; error?: string }> {
   try {
-    const response = await fetch(`${API_URL}/reservations`, {
+    const response = await fetch(`${API_URL}${path}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(input),
@@ -61,11 +73,11 @@ export async function createReservation(
           ? body.message
           : Array.isArray(body.message)
             ? body.message.join(', ')
-            : 'No se pudo enviar la reserva';
+            : 'No se pudo completar la solicitud';
       return { error: message };
     }
 
-    return { data: body as ReservationPublic };
+    return { data: body as T };
   } catch {
     return { error: 'Error de conexión. Intenta de nuevo.' };
   }

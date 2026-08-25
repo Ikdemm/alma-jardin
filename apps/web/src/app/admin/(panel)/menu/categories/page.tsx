@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { MenuCategoryPublic } from '@alma-jardin/shared';
+import Link from 'next/link';
+import type { MenuCategoryAdmin } from '@alma-jardin/shared';
 
 export default function MenuCategoriesAdminPage() {
-  const [categories, setCategories] = useState<MenuCategoryPublic[]>([]);
+  const [categories, setCategories] = useState<MenuCategoryAdmin[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({
     name: '',
@@ -112,6 +113,8 @@ export default function MenuCategoriesAdminPage() {
             <th align="left">Nombre</th>
             <th align="left">Slug</th>
             <th align="left">Orden</th>
+            <th align="left">Estado</th>
+            <th align="left">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -120,6 +123,10 @@ export default function MenuCategoriesAdminPage() {
               <td>{category.name}</td>
               <td>{category.slug}</td>
               <td>{category.orderIndex}</td>
+              <td>{category.isActive ? 'Activa' : 'Oculta'}</td>
+              <td>
+                <Link href={`/admin/menu/categories/${category.id}`}>Editar</Link>
+              </td>
             </tr>
           ))}
         </tbody>

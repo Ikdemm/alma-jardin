@@ -30,6 +30,7 @@ const EDITOR_PERMISSIONS: PermissionCode[] = [
   'reservations.read',
   'reservations.update',
   'contact_messages.read',
+  'contact_messages.update',
   'banners.read',
   'banners.create',
   'banners.update',
@@ -227,6 +228,7 @@ export class SeedService implements OnModuleInit {
         whatsappMessage:
           'Hola Alma Jardín, me gustaría hacer una reserva.',
         email: 'hola@almajardin.com',
+        staffNotificationEmail: 'hola@almajardin.com',
         instagramUrl: 'https://instagram.com/almajardin',
         openingHours: 'Mar–Dom · Almuerzo 12:00–16:00 · Cena 18:00–23:00',
       });

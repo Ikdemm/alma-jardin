@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import type { MenuCategoryPublic, MenuItemPublic } from '@alma-jardin/shared';
 import { formatPriceCents, MENU_ITEM_STATUS_LABELS } from '@/lib/format';
 
@@ -14,7 +15,9 @@ export default function MenuItemsAdminPage() {
     description: '',
     ingredients: '',
     priceCents: 0,
+    imageUrl: '',
     featured: false,
+    orderIndex: 0,
   });
 
   async function loadData() {
@@ -53,7 +56,9 @@ export default function MenuItemsAdminPage() {
         description: form.description || undefined,
         ingredients: form.ingredients || undefined,
         priceCents: Number(form.priceCents),
+        imageUrl: form.imageUrl || undefined,
         featured: form.featured,
+        orderIndex: Number(form.orderIndex),
       }),
     });
 
@@ -69,25 +74,10 @@ export default function MenuItemsAdminPage() {
       description: '',
       ingredients: '',
       priceCents: 0,
+      imageUrl: '',
       featured: false,
+      orderIndex: 0,
     }));
-    await loadData();
-  }
-
-  async function updateItemStatus(item: MenuItemPublic, status: MenuItemPublic['status']) {
-    setError(null);
-
-    const response = await fetch(`/api/admin/menu/admin/items/${item.id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status }),
-    });
-
-    if (!response.ok) {
-      setError('No se pudo actualizar el plato');
-      return;
-    }
-
     await loadData();
   }
 
@@ -158,6 +148,24 @@ export default function MenuItemsAdminPage() {
             }))
           }
         />
+        <input
+          placeholder="URL de imagen"
+          value={form.imageUrl}
+          onChange={(event) =>
+            setForm((current) => ({ ...current, imageUrl: event.target.value }))
+          }
+        />
+        <input
+          type="number"
+          placeholder="Orden"
+          value={form.orderIndex}
+          onChange={(event) =>
+            setForm((current) => ({
+              ...current,
+              orderIndex: Number(event.target.value),
+            }))
+          }
+        />
         <label style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
           <input
             type="checkbox"
@@ -179,6 +187,7 @@ export default function MenuItemsAdminPage() {
             <th align="left">Plato</th>
             <th align="left">Categoría</th>
             <th align="left">Precio</th>
+            <th align="left">Orden</th>
             <th align="left">Estado</th>
             <th align="left">Acciones</th>
           </tr>
@@ -192,23 +201,10 @@ export default function MenuItemsAdminPage() {
               </td>
               <td>{item.categorySlug}</td>
               <td>{formatPriceCents(item.priceCents)}</td>
+              <td>{item.orderIndex}</td>
               <td>{MENU_ITEM_STATUS_LABELS[item.status] ?? item.status}</td>
-              <td style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap' }}>
-                {item.status !== 'active' ? (
-                  <button type="button" onClick={() => updateItemStatus(item, 'active')}>
-                    Activar
-                  </button>
-                ) : null}
-                {item.status !== 'sold_out' ? (
-                  <button type="button" onClick={() => updateItemStatus(item, 'sold_out')}>
-                    Agotado
-                  </button>
-                ) : null}
-                {item.status !== 'hidden' ? (
-                  <button type="button" onClick={() => updateItemStatus(item, 'hidden')}>
-                    Ocultar
-                  </button>
-                ) : null}
+              <td>
+                <Link href={`/admin/menu/items/${item.id}`}>Editar</Link>
               </td>
             </tr>
           ))}

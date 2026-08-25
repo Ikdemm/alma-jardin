@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -57,16 +58,40 @@ export class MenuController {
     return this.menuService.updateCategory(id, dto);
   }
 
+  @RequirePermissions('menu_categories.read' satisfies PermissionCode)
+  @Get('admin/categories/:id')
+  getAdminCategory(@Param('id') id: string) {
+    return this.menuService.getAdminCategory(id);
+  }
+
+  @RequirePermissions('menu_categories.delete' satisfies PermissionCode)
+  @Delete('admin/categories/:id')
+  deleteCategory(@Param('id') id: string) {
+    return this.menuService.deleteCategory(id);
+  }
+
   @RequirePermissions('menu_items.read' satisfies PermissionCode)
-  @Get('admin/items')
-  listAdminItems(@Query('categoryId') categoryId?: string) {
-    return this.menuService.listAdminItems(categoryId);
+  @Get('admin/items/:id')
+  getAdminItem(@Param('id') id: string) {
+    return this.menuService.getAdminItem(id);
   }
 
   @RequirePermissions('menu_items.create' satisfies PermissionCode)
   @Post('admin/items')
   createItem(@Body() dto: CreateMenuItemDto) {
     return this.menuService.createItem(dto);
+  }
+
+  @RequirePermissions('menu_items.read' satisfies PermissionCode)
+  @Get('admin/items')
+  listAdminItems(@Query('categoryId') categoryId?: string) {
+    return this.menuService.listAdminItems(categoryId);
+  }
+
+  @RequirePermissions('menu_items.delete' satisfies PermissionCode)
+  @Delete('admin/items/:id')
+  deleteItem(@Param('id') id: string) {
+    return this.menuService.deleteItem(id);
   }
 
   @RequirePermissions('menu_items.update' satisfies PermissionCode)

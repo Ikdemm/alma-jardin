@@ -5,6 +5,15 @@ import styles from './menu-card.module.css';
 export function MenuCard({ item }: { item: MenuItemPublic }) {
   return (
     <article className={styles.card}>
+      {item.imageUrl ? (
+        <div
+          className={styles.image}
+          style={{ backgroundImage: `url(${item.imageUrl})` }}
+          role="img"
+          aria-label={item.name}
+        />
+      ) : null}
+      <div className={styles.body}>
       <div className={styles.top}>
         <h3>{item.name}</h3>
         <span className={styles.price}>{formatPriceCents(item.priceCents)}</span>
@@ -18,6 +27,7 @@ export function MenuCard({ item }: { item: MenuItemPublic }) {
       ) : item.featured ? (
         <span className={styles.featured}>Destacado del jardín</span>
       ) : null}
+      </div>
     </article>
   );
 }

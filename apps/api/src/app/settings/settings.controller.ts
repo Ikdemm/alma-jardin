@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Patch } from '@nestjs/common';
 import type { PermissionCode } from '@alma-jardin/shared';
-import { Public } from '../common/decorators/access.decorator';
-import { RequirePermissions } from '../common/decorators/access.decorator';
+import { Public, RequirePermissions } from '../common/decorators/access.decorator';
+import { UpdateRestaurantSettingsDto } from './dto/settings.dto';
 import { SettingsService } from './settings.service';
 
 @Controller('settings')
@@ -22,7 +22,7 @@ export class SettingsController {
 
   @RequirePermissions('settings.update' satisfies PermissionCode)
   @Patch()
-  update(@Body() body: Record<string, string>) {
+  update(@Body() body: UpdateRestaurantSettingsDto) {
     return this.settingsService.update(body);
   }
 }

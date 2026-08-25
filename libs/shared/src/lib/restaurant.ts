@@ -12,6 +12,7 @@ export interface RestaurantSettingsPublic {
   instagramUrl?: string;
   openingHours: string;
   mapUrl?: string;
+  staffNotificationEmail?: string;
 }
 
 export interface MenuCategoryPublic {
@@ -66,4 +67,29 @@ export interface CreateReservationInput {
   time: string;
   pax: number;
   notes?: string;
+}
+
+export interface MenuCategoryAdmin extends MenuCategoryPublic {
+  isActive: boolean;
+}
+
+export type ContactMessageStatus = 'new' | 'read' | 'archived';
+
+export interface ContactMessagePublic {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  subject: string;
+  message: string;
+  status: ContactMessageStatus;
+  createdAt: string;
+}
+
+export interface CreateContactInput {
+  name: string;
+  email: string;
+  phone?: string;
+  subject: string;
+  message: string;
 }

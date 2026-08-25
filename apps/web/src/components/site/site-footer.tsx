@@ -51,6 +51,7 @@ export function SiteFooter({ settings }: { settings: RestaurantSettingsPublic })
           <nav className={styles.links}>
             <Link href="/menu">Menú</Link>
             <Link href="/reservar">Reservar</Link>
+            <Link href="/contacto">Contacto</Link>
             <Link href="/admin/login">Admin</Link>
           </nav>
         </div>

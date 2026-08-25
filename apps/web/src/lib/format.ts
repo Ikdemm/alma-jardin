@@ -24,3 +24,9 @@ export const MENU_ITEM_STATUS_LABELS: Record<string, string> = {
   sold_out: 'Agotado',
   hidden: 'Oculto',
 };
+
+export const CONTACT_STATUS_LABELS: Record<string, string> = {
+  new: 'Nuevo',
+  read: 'Leído',
+  archived: 'Archivado',
+};

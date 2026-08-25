@@ -10,6 +10,7 @@ const LINKS = [
   { href: '/', label: 'Inicio' },
   { href: '/menu', label: 'Menú' },
   { href: '/reservar', label: 'Reservar' },
+  { href: '/contacto', label: 'Contacto' },
 ];
 
 export function SiteHeader({ siteName }: { siteName: string }) {

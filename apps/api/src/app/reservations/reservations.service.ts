@@ -1,7 +1,10 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import type { ReservationPublic, ReservationStatus } from '@alma-jardin/shared';
+import { NotificationsService } from '../notifications/notifications.service';
+import { SettingsService } from '../settings/settings.service';
 import { Reservation, ReservationDocument } from '../schemas/reservation.schema';
 import { CreateReservationDto, UpdateReservationStatusDto } from './dto/reservation.dto';
 
@@ -10,6 +13,9 @@ export class ReservationsService {
   constructor(
     @InjectModel(Reservation.name)
     private readonly reservationModel: Model<ReservationDocument>,
+    private readonly notifications: NotificationsService,
+    private readonly settingsService: SettingsService,
+    private readonly config: ConfigService,
   ) {}
 
   async createPublic(dto: CreateReservationDto): Promise<ReservationPublic> {
@@ -31,7 +37,9 @@ export class ReservationsService {
       source: 'web',
     });
 
-    return this.toPublic(reservation);
+    const publicReservation = this.toPublic(reservation);
+    await this.notifyStaffNewReservation(publicReservation);
+    return publicReservation;
   }
 
   async listAdmin(filters: {
@@ -65,10 +73,92 @@ export class ReservationsService {
       throw new NotFoundException('Reserva no encontrada');
     }
 
+    const previousStatus = reservation.status;
     reservation.status = dto.status;
     await reservation.save();
 
-    return this.toPublic(reservation);
+    const publicReservation = this.toPublic(reservation);
+
+    if (dto.status === 'confirmed' && previousStatus !== 'confirmed') {
+      await this.notifyGuestConfirmed(publicReservation);
+    }
+
+    return publicReservation;
+  }
+
+  private async notifyStaffNewReservation(reservation: ReservationPublic) {
+    const settings = await this.settingsService.getPublic();
+    const to = this.resolveStaffEmail(settings.staffNotificationEmail, settings.email);
+
+    if (!to) {
+      return;
+    }
+
+    const text = [
+      'Nueva solicitud de reserva en Alma Jardín',
+      '',
+      `Nombre: ${reservation.contactName}`,
+      `Teléfono: ${reservation.contactPhone}`,
+      reservation.contactEmail ? `Correo: ${reservation.contactEmail}` : null,
+      `Fecha: ${reservation.date}`,
+      `Hora: ${reservation.time}`,
+      `Personas: ${reservation.pax}`,
+      reservation.notes ? `Notas: ${reservation.notes}` : null,
+      '',
+      'Revisa el panel administrativo para confirmar o rechazar.',
+    ]
+      .filter(Boolean)
+      .join('\n');
+
+    await this.notifications.sendMail({
+      to,
+      subject: `[Alma Jardín] Nueva reserva — ${reservation.contactName}`,
+      text,
+    });
+  }
+
+  private async notifyGuestConfirmed(reservation: ReservationPublic) {
+    if (!reservation.contactEmail) {
+      return;
+    }
+
+    const settings = await this.settingsService.getPublic();
+    const whatsappHint = settings.whatsappPhone
+      ? `\n\nWhatsApp: https://wa.me/${settings.whatsappPhone}`
+      : '';
+
+    const text = [
+      `Hola ${reservation.contactName},`,
+      '',
+      `Tu reserva en ${settings.name} ha sido confirmada.`,
+      '',
+      `Fecha: ${reservation.date}`,
+      `Hora: ${reservation.time}`,
+      `Personas: ${reservation.pax}`,
+      '',
+      `Te esperamos en ${settings.address}.`,
+      whatsappHint,
+    ]
+      .filter(Boolean)
+      .join('\n');
+
+    await this.notifications.sendMail({
+      to: reservation.contactEmail,
+      subject: `Reserva confirmada — ${settings.name}`,
+      text,
+    });
+  }
+
+  private resolveStaffEmail(
+    staffNotificationEmail?: string,
+    fallbackEmail?: string,
+  ): string | undefined {
+    return (
+      staffNotificationEmail?.trim() ||
+      fallbackEmail?.trim() ||
+      this.config.get<string>('STAFF_NOTIFICATION_EMAIL') ||
+      undefined
+    );
   }
 
   private toPublic(reservation: ReservationDocument): ReservationPublic {

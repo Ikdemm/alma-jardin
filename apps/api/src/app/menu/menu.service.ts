@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import type { MenuCategoryPublic, MenuItemPublic } from '@alma-jardin/shared';
+import type { MenuCategoryAdmin, MenuCategoryPublic, MenuItemPublic } from '@alma-jardin/shared';
 import { slugify } from '../common/slug.util';
 import {
   MenuCategory,
@@ -94,9 +94,35 @@ export class MenuService {
       .filter((item): item is MenuItemPublic => item !== null);
   }
 
-  async listAdminCategories() {
+  async listAdminCategories(): Promise<MenuCategoryAdmin[]> {
     const categories = await this.categoryModel.find().sort({ orderIndex: 1 });
-    return categories.map((category) => this.toCategoryPublic(category));
+    return categories.map((category) => this.toCategoryAdmin(category));
+  }
+
+  async getAdminCategory(id: string): Promise<MenuCategoryAdmin> {
+    const category = await this.categoryModel.findById(id);
+
+    if (!category) {
+      throw new NotFoundException('Categoría no encontrada');
+    }
+
+    return this.toCategoryAdmin(category);
+  }
+
+  async getAdminItem(id: string): Promise<MenuItemPublic> {
+    const item = await this.itemModel.findById(id);
+
+    if (!item) {
+      throw new NotFoundException('Plato no encontrado');
+    }
+
+    const category = await this.categoryModel.findById(item.categoryId);
+
+    if (!category) {
+      throw new NotFoundException('Categoría no encontrada');
+    }
+
+    return this.toItemPublic(item, category);
   }
 
   async listAdminItems(categoryId?: string) {
@@ -131,7 +157,7 @@ export class MenuService {
       isActive: dto.isActive ?? true,
     });
 
-    return this.toCategoryPublic(category);
+    return this.toCategoryAdmin(category);
   }
 
   async updateCategory(id: string, dto: UpdateMenuCategoryDto) {
@@ -148,7 +174,7 @@ export class MenuService {
     if (dto.isActive !== undefined) category.isActive = dto.isActive;
 
     await category.save();
-    return this.toCategoryPublic(category);
+    return this.toCategoryAdmin(category);
   }
 
   async createItem(dto: CreateMenuItemDto) {
@@ -212,6 +238,43 @@ export class MenuService {
 
     await item.save();
     return this.toItemPublic(item, category!);
+  }
+
+  async deleteCategory(id: string) {
+    const category = await this.categoryModel.findById(id);
+
+    if (!category) {
+      throw new NotFoundException('Categoría no encontrada');
+    }
+
+    const itemCount = await this.itemModel.countDocuments({ categoryId: category._id });
+
+    if (itemCount > 0) {
+      throw new BadRequestException(
+        'No se puede eliminar una categoría con platos asociados',
+      );
+    }
+
+    await category.deleteOne();
+    return { deleted: true };
+  }
+
+  async deleteItem(id: string) {
+    const item = await this.itemModel.findById(id);
+
+    if (!item) {
+      throw new NotFoundException('Plato no encontrado');
+    }
+
+    await item.deleteOne();
+    return { deleted: true };
+  }
+
+  private toCategoryAdmin(category: MenuCategoryDocument): MenuCategoryAdmin {
+    return {
+      ...this.toCategoryPublic(category),
+      isActive: category.isActive,
+    };
   }
 
   private toCategoryPublic(category: MenuCategoryDocument): MenuCategoryPublic {

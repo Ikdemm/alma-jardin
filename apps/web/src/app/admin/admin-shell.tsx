@@ -9,6 +9,11 @@ import styles from './admin.module.css';
 const NAV_ITEMS = [
   { href: '/admin', label: 'Dashboard', permission: null },
   {
+    href: '/admin/settings',
+    label: 'Configuración',
+    permission: 'settings.read' as const,
+  },
+  {
     href: '/admin/menu/categories',
     label: 'Menú · Categorías',
     permission: 'menu_categories.read' as const,
@@ -22,6 +27,11 @@ const NAV_ITEMS = [
     href: '/admin/reservations',
     label: 'Reservas',
     permission: 'reservations.read' as const,
+  },
+  {
+    href: '/admin/contact',
+    label: 'Contacto',
+    permission: 'contact_messages.read' as const,
   },
   { href: '/admin/admins', label: 'Administradores', permission: 'admins.read' as const },
   { href: '/admin/roles', label: 'Roles', permission: 'roles.read' as const },

@@ -51,6 +51,7 @@ export class SettingsService {
       instagramUrl: settings.instagramUrl,
       openingHours: settings.openingHours,
       mapUrl: settings.mapUrl,
+      staffNotificationEmail: settings.staffNotificationEmail,
     };
   }
 }

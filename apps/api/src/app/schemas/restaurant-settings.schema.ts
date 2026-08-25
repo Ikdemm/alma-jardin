@@ -44,6 +44,9 @@ export class RestaurantSettings {
   @Prop()
   mapUrl?: string;
 
+  @Prop()
+  staffNotificationEmail?: string;
+
   createdAt!: Date;
   updatedAt!: Date;
 }
