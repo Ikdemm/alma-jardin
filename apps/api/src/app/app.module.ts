@@ -7,8 +7,11 @@ import { AdminsModule } from './admins/admins.module';
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
 import { HealthModule } from './health/health.module';
+import { MenuModule } from './menu/menu.module';
+import { ReservationsModule } from './reservations/reservations.module';
 import { RolesModule } from './roles/roles.module';
 import { SeedModule } from './seed/seed.module';
+import { SettingsModule } from './settings/settings.module';
 
 @Module({
   imports: [
@@ -20,6 +23,9 @@ import { SeedModule } from './seed/seed.module';
     AuthModule,
     AdminsModule,
     RolesModule,
+    SettingsModule,
+    MenuModule,
+    ReservationsModule,
     HealthModule,
     SeedModule,
   ],

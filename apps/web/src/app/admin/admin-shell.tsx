@@ -8,6 +8,21 @@ import styles from './admin.module.css';
 
 const NAV_ITEMS = [
   { href: '/admin', label: 'Dashboard', permission: null },
+  {
+    href: '/admin/menu/categories',
+    label: 'Menú · Categorías',
+    permission: 'menu_categories.read' as const,
+  },
+  {
+    href: '/admin/menu/items',
+    label: 'Menú · Platos',
+    permission: 'menu_items.read' as const,
+  },
+  {
+    href: '/admin/reservations',
+    label: 'Reservas',
+    permission: 'reservations.read' as const,
+  },
   { href: '/admin/admins', label: 'Administradores', permission: 'admins.read' as const },
   { href: '/admin/roles', label: 'Roles', permission: 'roles.read' as const },
 ];

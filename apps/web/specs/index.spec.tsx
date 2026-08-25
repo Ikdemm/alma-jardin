@@ -1,10 +1,10 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import Page from '../src/app/page';
+import { ColibriMark } from '../src/components/site/colibri-mark';
 
-describe('Page', () => {
+describe('ColibriMark', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Page />);
-    expect(baseElement).toBeTruthy();
+    const { container } = render(<ColibriMark />);
+    expect(container.querySelector('svg')).toBeTruthy();
   });
 });
