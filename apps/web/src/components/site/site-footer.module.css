@@ -1,0 +1,82 @@
+.footer {
+  margin-top: auto;
+  background: #1a231f;
+  color: #e8dfd0;
+}
+
+.inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 2rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+.footer h3 {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #f7f4ed;
+}
+
+.footer p {
+  margin: 0 0 0.45rem;
+  line-height: 1.6;
+  color: rgba(232, 223, 208, 0.82);
+}
+
+.footer a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  color: #8faf98;
+}
+
+.brandBlock p {
+  max-width: 18rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.75rem;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.2rem;
+  color: #f7f4ed;
+}
+
+.mark {
+  width: 2rem;
+  height: 1.5rem;
+  color: #8faf98;
+}
+
+.links {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.copy {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1rem 1.25rem 1.5rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: rgba(232, 223, 208, 0.55);
+}
+
+@media (max-width: 900px) {
+  .inner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .inner {
+    grid-template-columns: 1fr;
+  }
+}

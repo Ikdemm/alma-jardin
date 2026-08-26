@@ -1,0 +1,71 @@
+.card {
+  overflow: hidden;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(45, 74, 62, 0.08);
+  box-shadow: 0 10px 30px rgba(26, 35, 31, 0.04);
+}
+
+.image {
+  height: 180px;
+  background-size: cover;
+  background-position: center;
+}
+
+.body {
+  padding: 1.25rem 1.35rem;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.top h3 {
+  margin: 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.2rem;
+  color: #1a231f;
+}
+
+.price {
+  white-space: nowrap;
+  font-weight: 600;
+  color: #c17f59;
+}
+
+.description {
+  margin: 0.65rem 0 0;
+  line-height: 1.6;
+  color: #3d5248;
+}
+
+.ingredients {
+  margin: 0.45rem 0 0;
+  font-size: 0.88rem;
+  color: #6b7f74;
+  font-style: italic;
+}
+
+.badge,
+.featured {
+  display: inline-block;
+  margin-top: 0.75rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.badge {
+  background: rgba(154, 52, 18, 0.1);
+  color: #9a3412;
+}
+
+.featured {
+  background: rgba(74, 124, 89, 0.12);
+  color: #2d4a3e;
+}

@@ -1,0 +1,113 @@
+'use client';
+
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import type { AuthAdmin } from '@alma-jardin/shared';
+import { hasPermission } from '@alma-jardin/shared';
+import styles from './admin.module.css';
+
+const NAV_ITEMS = [
+  { href: '/admin', label: 'Dashboard', permission: null },
+  {
+    href: '/admin/settings',
+    label: 'Configuración',
+    permission: 'settings.read' as const,
+  },
+  {
+    href: '/admin/menu/categories',
+    label: 'Menú · Categorías',
+    permission: 'menu_categories.read' as const,
+  },
+  {
+    href: '/admin/menu/items',
+    label: 'Menú · Platos',
+    permission: 'menu_items.read' as const,
+  },
+  {
+    href: '/admin/shop/categories',
+    label: 'Tienda · Categorías',
+    permission: 'shop_categories.read' as const,
+  },
+  {
+    href: '/admin/shop/products',
+    label: 'Tienda · Obras',
+    permission: 'shop_products.read' as const,
+  },
+  {
+    href: '/admin/blog',
+    label: 'Blog',
+    permission: 'blog_posts.read' as const,
+  },
+  {
+    href: '/admin/content',
+    label: 'Contenido visual',
+    permission: 'banners.read' as const,
+  },
+  {
+    href: '/admin/reservations',
+    label: 'Reservas',
+    permission: 'reservations.read' as const,
+  },
+  {
+    href: '/admin/contact',
+    label: 'Contacto',
+    permission: 'contact_messages.read' as const,
+  },
+  { href: '/admin/admins', label: 'Administradores', permission: 'admins.read' as const },
+  { href: '/admin/roles', label: 'Roles', permission: 'roles.read' as const },
+];
+
+export function AdminShell({
+  admin,
+  children,
+}: {
+  admin: AuthAdmin;
+  children: React.ReactNode;
+}) {
+  const pathname = usePathname();
+  const router = useRouter();
+
+  async function logout() {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    router.push('/admin/login');
+    router.refresh();
+  }
+
+  return (
+    <div className={styles.adminShell}>
+      <aside className={styles.sidebar}>
+        <div className={styles.brand}>Alma Jardín Admin</div>
+        <nav className={styles.nav}>
+          {NAV_ITEMS.filter(
+            (item) =>
+              !item.permission || hasPermission(admin, item.permission),
+          ).map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              data-active={pathname === item.href ? 'true' : 'false'}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+      </aside>
+      <div className={styles.content}>
+        <header className={styles.header}>
+          <div>
+            <strong>
+              {admin.firstName} {admin.lastName}
+            </strong>
+            <div className={styles.userMeta}>
+              {admin.isSuperAdmin ? 'Super administrador' : admin.email}
+            </div>
+          </div>
+          <button type="button" onClick={logout}>
+            Cerrar sesión
+          </button>
+        </header>
+        <div className={styles.main}>{children}</div>
+      </div>
+    </div>
+  );
+}
