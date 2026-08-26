@@ -22,6 +22,10 @@ export class CreateMenuCategoryDto {
   description?: string;
 
   @IsOptional()
+  @IsString()
+  imageUrl?: string;
+
+  @IsOptional()
   @IsInt()
   orderIndex?: number;
 
@@ -42,6 +46,10 @@ export class UpdateMenuCategoryDto {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
 
   @IsOptional()
   @IsInt()

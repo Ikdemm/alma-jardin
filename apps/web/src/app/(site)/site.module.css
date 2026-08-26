@@ -361,6 +361,15 @@
   margin-bottom: 3rem;
 }
 
+.categoryImage {
+  width: 100%;
+  aspect-ratio: 21 / 9;
+  margin-bottom: 1rem;
+  border-radius: 1rem;
+  background-size: cover;
+  background-position: center;
+}
+
 .categoryBlock h2 {
   margin: 0 0 0.35rem;
   font-family: var(--font-display), Georgia, serif;

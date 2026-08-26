@@ -14,6 +14,9 @@ export class MenuCategory {
   @Prop({ trim: true })
   description?: string;
 
+  @Prop({ trim: true })
+  imageUrl?: string;
+
   @Prop({ default: 0 })
   orderIndex!: number;
 

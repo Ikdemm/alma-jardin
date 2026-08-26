@@ -142,6 +142,7 @@ export class ShopService {
       name: dto.name.trim(),
       slug,
       description: dto.description?.trim(),
+      imageUrl: dto.imageUrl?.trim() || undefined,
       orderIndex: dto.orderIndex ?? 0,
       isActive: dto.isActive ?? true,
     });
@@ -162,6 +163,9 @@ export class ShopService {
     if (dto.name) category.name = dto.name.trim();
     if (dto.slug) category.slug = slugify(dto.slug);
     if (dto.description !== undefined) category.description = dto.description.trim();
+    if (dto.imageUrl !== undefined) {
+      category.imageUrl = dto.imageUrl.trim() || undefined;
+    }
     if (dto.orderIndex !== undefined) category.orderIndex = dto.orderIndex;
     if (dto.isActive !== undefined) category.isActive = dto.isActive;
 
@@ -304,6 +308,7 @@ export class ShopService {
       name: category.name,
       slug: category.slug,
       description: category.description,
+      imageUrl: category.imageUrl,
       orderIndex: category.orderIndex,
     };
   }

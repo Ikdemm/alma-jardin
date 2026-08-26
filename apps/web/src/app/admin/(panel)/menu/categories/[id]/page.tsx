@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { MenuCategoryAdmin } from '@alma-jardin/shared';
+import { ImageUpload } from '@/components/admin/image-upload';
 
 export default function EditMenuCategoryPage() {
   const params = useParams<{ id: string }>();
@@ -38,6 +39,7 @@ export default function EditMenuCategoryPage() {
         name: form.name,
         slug: form.slug,
         description: form.description,
+        imageUrl: form.imageUrl ?? '',
         orderIndex: form.orderIndex,
         isActive: form.isActive,
       }),
@@ -103,6 +105,12 @@ export default function EditMenuCategoryPage() {
         <input
           value={form.description ?? ''}
           onChange={(event) => setForm({ ...form, description: event.target.value })}
+        />
+        <ImageUpload
+          label="Imagen de categoría"
+          folder="menu"
+          value={form.imageUrl ?? ''}
+          onChange={(url) => setForm({ ...form, imageUrl: url })}
         />
         <input
           type="number"

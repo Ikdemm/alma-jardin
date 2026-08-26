@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { ShopCategoryAdmin } from '@alma-jardin/shared';
+import { ImageUpload } from '@/components/admin/image-upload';
 
 export default function EditShopCategoryPage() {
   const params = useParams<{ id: string }>();
@@ -34,7 +35,14 @@ export default function EditShopCategoryPage() {
     const response = await fetch(`/api/admin/shop/admin/categories/${params.id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
+      body: JSON.stringify({
+        name: form.name,
+        slug: form.slug,
+        description: form.description,
+        imageUrl: form.imageUrl ?? '',
+        orderIndex: form.orderIndex,
+        isActive: form.isActive,
+      }),
     });
 
     setSaving(false);
@@ -98,6 +106,12 @@ export default function EditShopCategoryPage() {
           onChange={(event) =>
             setForm({ ...form, description: event.target.value })
           }
+        />
+        <ImageUpload
+          label="Imagen de categoría"
+          folder="shop"
+          value={form.imageUrl ?? ''}
+          onChange={(url) => setForm({ ...form, imageUrl: url })}
         />
         <input
           type="number"

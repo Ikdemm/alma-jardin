@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import type { MenuCategoryAdmin } from '@alma-jardin/shared';
+import { ImageUpload } from '@/components/admin/image-upload';
 
 export default function MenuCategoriesAdminPage() {
   const [categories, setCategories] = useState<MenuCategoryAdmin[]>([]);
@@ -11,6 +12,7 @@ export default function MenuCategoriesAdminPage() {
     name: '',
     slug: '',
     description: '',
+    imageUrl: '',
     orderIndex: 0,
   });
 
@@ -37,6 +39,7 @@ export default function MenuCategoriesAdminPage() {
         name: form.name,
         slug: form.slug || undefined,
         description: form.description || undefined,
+        imageUrl: form.imageUrl || undefined,
         orderIndex: Number(form.orderIndex),
       }),
     });
@@ -47,7 +50,7 @@ export default function MenuCategoriesAdminPage() {
       return;
     }
 
-    setForm({ name: '', slug: '', description: '', orderIndex: 0 });
+    setForm({ name: '', slug: '', description: '', imageUrl: '', orderIndex: 0 });
     await loadCategories();
   }
 
@@ -89,6 +92,14 @@ export default function MenuCategoriesAdminPage() {
           value={form.description}
           onChange={(event) =>
             setForm((current) => ({ ...current, description: event.target.value }))
+          }
+        />
+        <ImageUpload
+          label="Imagen de categoría"
+          folder="menu"
+          value={form.imageUrl}
+          onChange={(url) =>
+            setForm((current) => ({ ...current, imageUrl: url }))
           }
         />
         <input

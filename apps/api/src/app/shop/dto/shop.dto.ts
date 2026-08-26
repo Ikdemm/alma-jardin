@@ -23,6 +23,10 @@ export class CreateShopCategoryDto {
   description?: string;
 
   @IsOptional()
+  @IsString()
+  imageUrl?: string;
+
+  @IsOptional()
   @IsInt()
   orderIndex?: number;
 
@@ -43,6 +47,10 @@ export class UpdateShopCategoryDto {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
 
   @IsOptional()
   @IsInt()

@@ -47,6 +47,14 @@ export default async function MenuPage() {
               id={category.slug}
               className={styles.categoryBlock}
             >
+              {category.imageUrl ? (
+                <div
+                  className={styles.categoryImage}
+                  style={{ backgroundImage: `url(${category.imageUrl})` }}
+                  role="img"
+                  aria-label={category.name}
+                />
+              ) : null}
               <h2>{category.name}</h2>
               {category.description ? <p>{category.description}</p> : null}
               <div className={styles.menuGrid}>

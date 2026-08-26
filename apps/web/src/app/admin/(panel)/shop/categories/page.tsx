@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import type { ShopCategoryAdmin } from '@alma-jardin/shared';
+import { ImageUpload } from '@/components/admin/image-upload';
 
 export default function ShopCategoriesAdminPage() {
   const [categories, setCategories] = useState<ShopCategoryAdmin[]>([]);
@@ -11,6 +12,7 @@ export default function ShopCategoriesAdminPage() {
     name: '',
     slug: '',
     description: '',
+    imageUrl: '',
     orderIndex: 0,
   });
 
@@ -37,6 +39,7 @@ export default function ShopCategoriesAdminPage() {
         name: form.name,
         slug: form.slug || undefined,
         description: form.description || undefined,
+        imageUrl: form.imageUrl || undefined,
         orderIndex: Number(form.orderIndex),
       }),
     });
@@ -47,7 +50,7 @@ export default function ShopCategoriesAdminPage() {
       return;
     }
 
-    setForm({ name: '', slug: '', description: '', orderIndex: 0 });
+    setForm({ name: '', slug: '', description: '', imageUrl: '', orderIndex: 0 });
     await loadCategories();
   }
 
@@ -86,6 +89,12 @@ export default function ShopCategoriesAdminPage() {
           onChange={(event) =>
             setForm({ ...form, description: event.target.value })
           }
+        />
+        <ImageUpload
+          label="Imagen de categoría"
+          folder="shop"
+          value={form.imageUrl}
+          onChange={(url) => setForm({ ...form, imageUrl: url })}
         />
         <input
           type="number"

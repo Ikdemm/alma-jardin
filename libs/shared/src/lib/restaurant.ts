@@ -20,6 +20,7 @@ export interface MenuCategoryPublic {
   name: string;
   slug: string;
   description?: string;
+  imageUrl?: string;
   orderIndex: number;
 }
 
@@ -126,6 +127,7 @@ export interface ShopCategoryPublic {
   name: string;
   slug: string;
   description?: string;
+  imageUrl?: string;
   orderIndex: number;
 }
 
