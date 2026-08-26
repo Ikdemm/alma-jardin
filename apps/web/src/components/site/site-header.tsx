@@ -28,16 +28,6 @@ export function SiteHeader() {
       <div className={styles.inner}>
         <div className={styles.left}>
           <Link
-            href="/carrito"
-            className={styles.cartLink}
-            aria-label="Ver carrito"
-            data-active={pathname === '/carrito' ? 'true' : 'false'}
-            onClick={() => setOpen(false)}
-          >
-            <CartIcon className={styles.cartIcon} />
-          </Link>
-
-          <Link
             href="/"
             className={styles.brand}
             aria-label="Alma Jardín — inicio"
@@ -86,6 +76,16 @@ export function SiteHeader() {
             <span />
             <span />
           </button>
+
+          <Link
+            href="/carrito"
+            className={styles.cartLink}
+            aria-label="Ver carrito"
+            data-active={pathname === '/carrito' ? 'true' : 'false'}
+            onClick={() => setOpen(false)}
+          >
+            <CartIcon className={styles.cartIcon} />
+          </Link>
         </div>
       </div>
     </header>

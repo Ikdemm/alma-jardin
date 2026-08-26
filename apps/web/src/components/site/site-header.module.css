@@ -18,7 +18,7 @@
 
 .header[data-home='true'] .nav a,
 .header[data-home='true'] .cartLink {
-  color: #f7f4ed;
+  color: #ffffff;
 }
 
 .header[data-home='true'] .nav a:hover,
@@ -82,19 +82,30 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 999px;
-  color: #2d4a3e;
+  color: #ffffff;
   text-decoration: none;
-  transition: background 0.2s ease;
+  background: #2d4a3e;
+  transition: background 0.2s ease, opacity 0.2s ease;
+  flex-shrink: 0;
 }
 
 .cartLink:hover,
 .cartLink[data-active='true'] {
-  background: rgba(74, 124, 89, 0.12);
+  background: #1f332b;
+}
+
+.header[data-home='true'] .cartLink {
+  background: transparent;
+}
+
+.header[data-home='true'] .cartLink:hover,
+.header[data-home='true'] .cartLink[data-active='true'] {
+  background: rgba(255, 255, 255, 0.14);
 }
 
 .cartIcon {
-  width: 1.35rem;
-  height: 1.35rem;
+  width: 1.4rem;
+  height: 1.4rem;
 }
 
 .nav {
