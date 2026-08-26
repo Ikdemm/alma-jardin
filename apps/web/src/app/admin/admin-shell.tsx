@@ -24,6 +24,21 @@ const NAV_ITEMS = [
     permission: 'menu_items.read' as const,
   },
   {
+    href: '/admin/shop/categories',
+    label: 'Tienda · Categorías',
+    permission: 'shop_categories.read' as const,
+  },
+  {
+    href: '/admin/shop/products',
+    label: 'Tienda · Obras',
+    permission: 'shop_products.read' as const,
+  },
+  {
+    href: '/admin/blog',
+    label: 'Blog',
+    permission: 'blog_posts.read' as const,
+  },
+  {
     href: '/admin/reservations',
     label: 'Reservas',
     permission: 'reservations.read' as const,

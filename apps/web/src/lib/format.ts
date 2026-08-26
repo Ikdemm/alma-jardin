@@ -30,3 +30,17 @@ export const CONTACT_STATUS_LABELS: Record<string, string> = {
   read: 'Leído',
   archived: 'Archivado',
 };
+
+export const BLOG_CATEGORY_LABELS: Record<string, string> = {
+  historias: 'Historias',
+  recetas: 'Recetas',
+  ingredientes: 'Ingredientes',
+  eventos: 'Eventos',
+  noticias: 'Noticias',
+};
+
+export const BLOG_STATUS_LABELS: Record<string, string> = {
+  draft: 'Borrador',
+  published: 'Publicado',
+  archived: 'Archivado',
+};

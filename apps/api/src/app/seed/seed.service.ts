@@ -6,6 +6,7 @@ import type { PermissionCode } from '@alma-jardin/shared';
 import { PasswordService } from '../common/password.service';
 import { slugify } from '../common/slug.util';
 import { Admin, AdminDocument } from '../schemas/admin.schema';
+import { BlogPost, BlogPostDocument } from '../schemas/blog-post.schema';
 import {
   MenuCategory,
   MenuCategoryDocument,
@@ -16,6 +17,11 @@ import {
   RestaurantSettingsDocument,
 } from '../schemas/restaurant-settings.schema';
 import { Role, RoleDocument } from '../schemas/role.schema';
+import {
+  ShopCategory,
+  ShopCategoryDocument,
+} from '../schemas/shop-category.schema';
+import { ShopProduct, ShopProductDocument } from '../schemas/shop-product.schema';
 
 const EDITOR_PERMISSIONS: PermissionCode[] = [
   'menu_categories.read',
@@ -24,9 +30,16 @@ const EDITOR_PERMISSIONS: PermissionCode[] = [
   'menu_items.read',
   'menu_items.create',
   'menu_items.update',
+  'shop_categories.read',
+  'shop_categories.create',
+  'shop_categories.update',
+  'shop_products.read',
+  'shop_products.create',
+  'shop_products.update',
   'blog_posts.read',
   'blog_posts.create',
   'blog_posts.update',
+  'blog_posts.delete',
   'reservations.read',
   'reservations.update',
   'contact_messages.read',
@@ -39,6 +52,91 @@ const EDITOR_PERMISSIONS: PermissionCode[] = [
   'featured_sections.update',
   'settings.read',
   'settings.update',
+];
+
+const BLOG_SEED = [
+  {
+    title: 'El colibrí que visita el jardín',
+    excerpt:
+      'Cada atardecer, un colibrí recorre las flores del huerto. Así nació el símbolo de Alma Jardín.',
+    content:
+      'Hay un momento del día en que el jardín se detiene. La luz se filtra entre las hojas y, casi sin aviso, aparece el colibrí.\n\nEsa visita silenciosa inspira nuestra cocina: precisión, delicadeza y respeto por lo vivo. Cada plato busca esa misma gracia — ingredientes de estación, fuego lento y una mesa abierta al verde.',
+    category: 'historias' as const,
+    featured: true,
+  },
+  {
+    title: 'Receta de temporada: pesto del huerto',
+    excerpt:
+      'Albahaca fresca, piñones tostados y el aceite justo: el pesto que acompaña nuestras pastas.',
+    content:
+      'Cosechamos la albahaca por la mañana, cuando el aroma está más intenso.\n\nTrituramos con piñones tostados, ajo suave y parmesano añejo. El secreto no es la cantidad, sino el equilibrio: suficiente aceite para unir, nunca para ahogar.\n\nSirve sobre tagliatelle frescos o como base de nuestra pizza Colibrí verde.',
+    category: 'recetas' as const,
+    featured: true,
+  },
+  {
+    title: 'Cena bajo los árboles — próximo evento',
+    excerpt:
+      'Una noche especial con menú degustación en el jardín. Cupos limitados.',
+    content:
+      'Abrimos las mesas del jardín para una cena íntima de temporada.\n\nMenú degustación de cinco tiempos, maridaje opcional y música en vivo suave. Reserva con anticipación desde el sitio o por WhatsApp.',
+    category: 'eventos' as const,
+    featured: false,
+  },
+];
+
+const SHOP_SEED = [
+  {
+    category: {
+      name: 'Pinturas',
+      slug: 'pinturas',
+      description: 'Obras inspiradas en el jardín y la luz del bosque.',
+      orderIndex: 1,
+    },
+    products: [
+      {
+        name: 'Colibrí al atardecer',
+        description: 'Acuarela sobre papel de algodón.',
+        story:
+          'Captura el instante en que el colibrí cruza el jardín bajo la luz dorada.',
+        artistName: 'Colectivo Alma',
+        technique: 'Acuarela',
+        medium: 'Papel de algodón',
+        dimensions: '40 × 50 cm',
+        priceCents: 45000000,
+        featured: true,
+      },
+      {
+        name: 'Hojas de lluvia',
+        description: 'Óleo con texturas vegetales.',
+        artistName: 'Colectivo Alma',
+        technique: 'Óleo',
+        medium: 'Lienzo',
+        dimensions: '60 × 80 cm',
+        priceCents: 78000000,
+        featured: false,
+      },
+    ],
+  },
+  {
+    category: {
+      name: 'Cerámica',
+      slug: 'ceramica',
+      description: 'Piezas utilitarias y decorativas del taller.',
+      orderIndex: 2,
+    },
+    products: [
+      {
+        name: 'Cuenco de barro verde',
+        description: 'Esmalte mate inspirado en el musgo del jardín.',
+        artistName: 'Taller Alma',
+        technique: 'Torneado',
+        medium: 'Cerámica esmaltada',
+        dimensions: 'Ø 18 cm',
+        priceCents: 18000000,
+        featured: true,
+      },
+    ],
+  },
 ];
 
 const MENU_SEED = [
@@ -155,6 +253,12 @@ export class SeedService implements OnModuleInit {
     private readonly categoryModel: Model<MenuCategoryDocument>,
     @InjectModel(MenuItem.name)
     private readonly itemModel: Model<MenuItemDocument>,
+    @InjectModel(ShopCategory.name)
+    private readonly shopCategoryModel: Model<ShopCategoryDocument>,
+    @InjectModel(ShopProduct.name)
+    private readonly shopProductModel: Model<ShopProductDocument>,
+    @InjectModel(BlogPost.name)
+    private readonly blogModel: Model<BlogPostDocument>,
     private readonly passwordService: PasswordService,
     private readonly config: ConfigService,
   ) {}
@@ -163,6 +267,8 @@ export class SeedService implements OnModuleInit {
     await this.seedRoles();
     await this.seedSuperAdmin();
     await this.seedRestaurantContent();
+    await this.seedShopContent();
+    await this.seedBlogContent();
   }
 
   private async seedRoles() {
@@ -260,5 +366,61 @@ export class SeedService implements OnModuleInit {
 
       this.logger.log(`Seeded category "${group.category.name}"`);
     }
+  }
+
+  private async seedShopContent() {
+    const count = await this.shopCategoryModel.countDocuments();
+
+    if (count > 0) {
+      return;
+    }
+
+    for (const group of SHOP_SEED) {
+      const category = await this.shopCategoryModel.create(group.category);
+
+      for (const [index, product] of group.products.entries()) {
+        await this.shopProductModel.create({
+          categoryId: category._id,
+          name: product.name,
+          slug: slugify(product.name),
+          description: product.description,
+          story: product.story,
+          artistName: product.artistName,
+          technique: product.technique,
+          medium: product.medium,
+          dimensions: product.dimensions,
+          priceCents: product.priceCents,
+          imageUrls: [],
+          featured: product.featured,
+          orderIndex: index,
+          status: 'active',
+        });
+      }
+
+      this.logger.log(`Seeded shop category "${group.category.name}"`);
+    }
+  }
+
+  private async seedBlogContent() {
+    const count = await this.blogModel.countDocuments();
+
+    if (count > 0) {
+      return;
+    }
+
+    for (const post of BLOG_SEED) {
+      await this.blogModel.create({
+        title: post.title,
+        slug: slugify(post.title),
+        excerpt: post.excerpt,
+        content: post.content,
+        category: post.category,
+        status: 'published',
+        featured: post.featured,
+        publishedAt: new Date(),
+      });
+    }
+
+    this.logger.log(`Seeded ${BLOG_SEED.length} blog posts`);
   }
 }

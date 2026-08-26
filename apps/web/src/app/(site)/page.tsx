@@ -115,6 +115,12 @@ export default async function HomePage() {
             <Link href="/menu" className={styles.primaryButton}>
               Explorar menú completo
             </Link>
+            <Link href="/tienda" className={styles.secondaryButton}>
+              Ver tienda de arte
+            </Link>
+            <Link href="/blog" className={styles.secondaryButton}>
+              Leer el blog
+            </Link>
           </div>
         </div>
       </section>

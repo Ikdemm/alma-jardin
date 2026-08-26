@@ -9,6 +9,8 @@ import styles from './site-header.module.css';
 const LINKS = [
   { href: '/', label: 'Inicio' },
   { href: '/menu', label: 'Menú' },
+  { href: '/tienda', label: 'Tienda' },
+  { href: '/blog', label: 'Blog' },
   { href: '/reservar', label: 'Reservar' },
   { href: '/contacto', label: 'Contacto' },
 ];

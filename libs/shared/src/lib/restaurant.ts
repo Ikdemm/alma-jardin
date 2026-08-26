@@ -93,3 +93,65 @@ export interface CreateContactInput {
   subject: string;
   message: string;
 }
+
+export const BLOG_CATEGORIES = [
+  'historias',
+  'recetas',
+  'ingredientes',
+  'eventos',
+  'noticias',
+] as const;
+
+export type BlogCategory = (typeof BLOG_CATEGORIES)[number];
+
+export type BlogPostStatus = 'draft' | 'published' | 'archived';
+
+export interface BlogPostPublic {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  category: BlogCategory;
+  coverImageUrl?: string;
+  status: BlogPostStatus;
+  featured: boolean;
+  publishedAt?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ShopCategoryPublic {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  orderIndex: number;
+}
+
+export interface ShopCategoryAdmin extends ShopCategoryPublic {
+  isActive: boolean;
+}
+
+export type ShopProductStatus = 'active' | 'sold_out' | 'hidden';
+
+export interface ShopProductPublic {
+  id: string;
+  categoryId: string;
+  categorySlug: string;
+  name: string;
+  slug: string;
+  description?: string;
+  story?: string;
+  artistName?: string;
+  technique?: string;
+  medium?: string;
+  dimensions?: string;
+  priceCents: number;
+  imageUrls: string[];
+  status: ShopProductStatus;
+  featured: boolean;
+  orderIndex: number;
+  whatsappInquiryMessage?: string;
+}
+

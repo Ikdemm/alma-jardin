@@ -5,6 +5,7 @@ import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { PermissionsGuard } from './common/guards/permissions.guard';
 import { AdminsModule } from './admins/admins.module';
 import { AuthModule } from './auth/auth.module';
+import { BlogModule } from './blog/blog.module';
 import { ContactModule } from './contact/contact.module';
 import { DatabaseModule } from './database/database.module';
 import { HealthModule } from './health/health.module';
@@ -14,6 +15,7 @@ import { ReservationsModule } from './reservations/reservations.module';
 import { RolesModule } from './roles/roles.module';
 import { SeedModule } from './seed/seed.module';
 import { SettingsModule } from './settings/settings.module';
+import { ShopModule } from './shop/shop.module';
 
 @Module({
   imports: [
@@ -28,6 +30,8 @@ import { SettingsModule } from './settings/settings.module';
     RolesModule,
     SettingsModule,
     MenuModule,
+    ShopModule,
+    BlogModule,
     ReservationsModule,
     ContactModule,
     HealthModule,

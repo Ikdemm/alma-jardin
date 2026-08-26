@@ -1,4 +1,6 @@
 import type {
+  BlogCategory,
+  BlogPostPublic,
   CreateContactInput,
   CreateReservationInput,
   MenuCategoryPublic,
@@ -6,6 +8,8 @@ import type {
   ReservationPublic,
   RestaurantSettingsPublic,
   ContactMessagePublic,
+  ShopCategoryPublic,
+  ShopProductPublic,
 } from '@alma-jardin/shared';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3333/api';
@@ -42,6 +46,36 @@ export function getMenuItems(category?: string): Promise<MenuItemPublic[] | null
 
 export function getFeaturedItems(): Promise<MenuItemPublic[] | null> {
   return publicFetch('/menu/featured');
+}
+
+export function getBlogPosts(category?: BlogCategory): Promise<BlogPostPublic[] | null> {
+  const query = category ? `?category=${encodeURIComponent(category)}` : '';
+  return publicFetch(`/blog${query}`);
+}
+
+export function getFeaturedBlogPosts(): Promise<BlogPostPublic[] | null> {
+  return publicFetch('/blog/featured');
+}
+
+export function getBlogPostBySlug(slug: string): Promise<BlogPostPublic | null> {
+  return publicFetch(`/blog/by-slug/${encodeURIComponent(slug)}`);
+}
+
+export function getShopCategories(): Promise<ShopCategoryPublic[] | null> {
+  return publicFetch('/shop/categories');
+}
+
+export function getShopProducts(category?: string): Promise<ShopProductPublic[] | null> {
+  const query = category ? `?category=${encodeURIComponent(category)}` : '';
+  return publicFetch(`/shop/products${query}`);
+}
+
+export function getFeaturedShopProducts(): Promise<ShopProductPublic[] | null> {
+  return publicFetch('/shop/featured');
+}
+
+export function getShopProductBySlug(slug: string): Promise<ShopProductPublic | null> {
+  return publicFetch(`/shop/products/by-slug/${encodeURIComponent(slug)}`);
 }
 
 export async function createReservation(
