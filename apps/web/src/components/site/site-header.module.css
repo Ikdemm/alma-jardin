@@ -16,13 +16,8 @@
   backdrop-filter: none;
 }
 
-.header[data-home='true'] .brand,
 .header[data-home='true'] .nav a {
   color: #f7f4ed;
-}
-
-.header[data-home='true'] .mark {
-  color: #a8c4b0;
 }
 
 .header[data-home='true'] .nav a:hover,
@@ -67,18 +62,7 @@
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
-  color: #1a231f;
   text-decoration: none;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 1.25rem;
-  letter-spacing: 0.02em;
-}
-
-.mark {
-  width: 2.4rem;
-  height: 1.8rem;
-  color: #4a7c59;
 }
 
 .nav {

@@ -1,10 +1,10 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { ColibriMark } from '../src/components/site/colibri-mark';
+import { AlmaLogo } from '../src/components/site/alma-logo';
 
-describe('ColibriMark', () => {
+describe('AlmaLogo', () => {
   it('should render successfully', () => {
-    const { container } = render(<ColibriMark />);
-    expect(container.querySelector('svg')).toBeTruthy();
+    const { container } = render(<AlmaLogo />);
+    expect(container.querySelector('img')).toBeTruthy();
   });
 });

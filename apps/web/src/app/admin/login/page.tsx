@@ -3,6 +3,7 @@
 import { FormEvent, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { AlmaLogo } from '@/components/site/alma-logo';
 import styles from './login.module.css';
 
 export default function AdminLoginPage() {
@@ -41,7 +42,10 @@ export default function AdminLoginPage() {
   return (
     <main className={styles.loginPage}>
       <div className={styles.card}>
-        <h1>Admin — Alma Jardín</h1>
+        <div className={styles.logoWrap}>
+          <AlmaLogo tone="dark" size="lg" />
+        </div>
+        <h1>Admin</h1>
         <p>Inicia sesión con tu cuenta administrativa.</p>
         <form className={styles.form} onSubmit={onSubmit}>
           <label>

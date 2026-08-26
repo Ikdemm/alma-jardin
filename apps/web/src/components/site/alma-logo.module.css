@@ -1,0 +1,35 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+}
+
+.image {
+  width: auto;
+  height: 100%;
+  object-fit: contain;
+}
+
+.sm {
+  height: 1.75rem;
+}
+
+.md {
+  height: 2.25rem;
+}
+
+.lg {
+  height: 3rem;
+}
+
+.hero {
+  height: clamp(3.5rem, 8vw, 4.75rem);
+}
+
+.dark .image {
+  filter: brightness(0) saturate(100%);
+}
+
+.light .image {
+  filter: none;
+}

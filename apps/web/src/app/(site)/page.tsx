@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ColibriMark } from '@/components/site/colibri-mark';
+import { AlmaLogo } from '@/components/site/alma-logo';
 import { JsonLd } from '@/components/site/json-ld';
 import { MenuCard } from '@/components/site/menu-card';
 import { Reveal } from '@/components/site/reveal';
@@ -64,7 +64,6 @@ export default async function HomePage() {
     (banner) => banner.placement === 'home_mid',
   );
 
-  const brandName = settings?.name ?? 'Alma Jardín';
   const heroTitle =
     settings?.heroTitle ?? 'Donde el jardín se encuentra con la alta cocina';
   const heroSubtitle =
@@ -95,8 +94,7 @@ export default async function HomePage() {
         <div className={styles.heroOverlay} />
         <div className={styles.heroContent}>
           <div className={styles.brandLockup}>
-            <ColibriMark />
-            <span>{brandName}</span>
+            <AlmaLogo tone="light" size="hero" priority />
           </div>
           <h1>{heroTitle}</h1>
           <p>{heroSubtitle}</p>
