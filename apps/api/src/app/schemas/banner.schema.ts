@@ -22,6 +22,7 @@ export class Banner {
   ctaHref?: string;
 
   @Prop({
+    type: String,
     enum: ['home_hero', 'home_mid'],
     default: 'home_mid',
   })

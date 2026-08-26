@@ -28,6 +28,7 @@ export class Reservation {
   notes?: string;
 
   @Prop({
+    type: String,
     enum: ['pending', 'confirmed', 'rejected', 'cancelled'],
     default: 'pending',
   })

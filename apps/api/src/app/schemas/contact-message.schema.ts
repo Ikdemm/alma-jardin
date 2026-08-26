@@ -22,6 +22,7 @@ export class ContactMessage {
   message!: string;
 
   @Prop({
+    type: String,
     enum: ['new', 'read', 'archived'],
     default: 'new',
   })

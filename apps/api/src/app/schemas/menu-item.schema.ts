@@ -28,6 +28,7 @@ export class MenuItem {
   imageUrl?: string;
 
   @Prop({
+    type: String,
     enum: ['active', 'sold_out', 'hidden'],
     default: 'active',
   })

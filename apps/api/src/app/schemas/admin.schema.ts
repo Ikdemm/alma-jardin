@@ -22,6 +22,7 @@ export class Admin {
   passwordHash!: string;
 
   @Prop({
+    type: String,
     required: true,
     enum: ['pending', 'active', 'blocked', 'inactive'],
     default: 'pending',

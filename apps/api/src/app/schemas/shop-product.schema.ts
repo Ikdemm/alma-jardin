@@ -40,6 +40,7 @@ export class ShopProduct {
   imageUrls!: string[];
 
   @Prop({
+    type: String,
     enum: ['active', 'sold_out', 'hidden'],
     default: 'active',
   })

@@ -19,6 +19,7 @@ export class BlogPost {
   content!: string;
 
   @Prop({
+    type: String,
     required: true,
     enum: ['historias', 'recetas', 'ingredientes', 'eventos', 'noticias'],
   })
@@ -28,6 +29,7 @@ export class BlogPost {
   coverImageUrl?: string;
 
   @Prop({
+    type: String,
     enum: ['draft', 'published', 'archived'],
     default: 'draft',
   })
