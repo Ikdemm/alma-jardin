@@ -7,6 +7,53 @@
   border-bottom: 1px solid rgba(45, 74, 62, 0.08);
 }
 
+.header[data-home='true'] {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, rgba(26, 35, 31, 0.45), transparent);
+  border-bottom: 0;
+  backdrop-filter: none;
+}
+
+.header[data-home='true'] .brand,
+.header[data-home='true'] .nav a {
+  color: #f7f4ed;
+}
+
+.header[data-home='true'] .mark {
+  color: #a8c4b0;
+}
+
+.header[data-home='true'] .nav a:hover,
+.header[data-home='true'] .nav a[data-active='true'] {
+  background: rgba(247, 244, 237, 0.14);
+}
+
+.header[data-home='true'] .cta {
+  background: #f7f4ed !important;
+  color: #1a231f !important;
+}
+
+.header[data-home='true'] .menuToggle {
+  background: rgba(247, 244, 237, 0.16);
+}
+
+.header[data-home='true'] .menuToggle span {
+  background: #f7f4ed;
+}
+
+.header[data-home='true'] .nav {
+  background: transparent;
+}
+
+@media (max-width: 768px) {
+  .header[data-home='true'] .nav {
+    background: rgba(26, 35, 31, 0.96);
+    border-bottom: 0;
+  }
+}
+
 .inner {
   max-width: 1120px;
   margin: 0 auto;

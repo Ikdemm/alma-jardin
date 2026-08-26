@@ -6,7 +6,12 @@ import type { PermissionCode } from '@alma-jardin/shared';
 import { PasswordService } from '../common/password.service';
 import { slugify } from '../common/slug.util';
 import { Admin, AdminDocument } from '../schemas/admin.schema';
+import { Banner, BannerDocument } from '../schemas/banner.schema';
 import { BlogPost, BlogPostDocument } from '../schemas/blog-post.schema';
+import {
+  FeaturedSection,
+  FeaturedSectionDocument,
+} from '../schemas/featured-section.schema';
 import {
   MenuCategory,
   MenuCategoryDocument,
@@ -22,6 +27,24 @@ import {
   ShopCategoryDocument,
 } from '../schemas/shop-category.schema';
 import { ShopProduct, ShopProductDocument } from '../schemas/shop-product.schema';
+import { Testimonial, TestimonialDocument } from '../schemas/testimonial.schema';
+
+const IMAGES = {
+  heroGarden:
+    'https://images.unsplash.com/photo-1466692476866-aef1dfb1e735?auto=format&fit=crop&w=2000&q=80',
+  dining:
+    'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1600&q=80',
+  pasta:
+    'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=1200&q=80',
+  pizza:
+    'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1200&q=80',
+  gardenPath:
+    'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=1600&q=80',
+  herbs:
+    'https://images.unsplash.com/photo-1461354464878-ad92f492a5a0?auto=format&fit=crop&w=1200&q=80',
+  art:
+    'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1200&q=80',
+};
 
 const EDITOR_PERMISSIONS: PermissionCode[] = [
   'menu_categories.read',
@@ -259,6 +282,12 @@ export class SeedService implements OnModuleInit {
     private readonly shopProductModel: Model<ShopProductDocument>,
     @InjectModel(BlogPost.name)
     private readonly blogModel: Model<BlogPostDocument>,
+    @InjectModel(Banner.name)
+    private readonly bannerModel: Model<BannerDocument>,
+    @InjectModel(FeaturedSection.name)
+    private readonly featuredModel: Model<FeaturedSectionDocument>,
+    @InjectModel(Testimonial.name)
+    private readonly testimonialModel: Model<TestimonialDocument>,
     private readonly passwordService: PasswordService,
     private readonly config: ConfigService,
   ) {}
@@ -269,6 +298,7 @@ export class SeedService implements OnModuleInit {
     await this.seedRestaurantContent();
     await this.seedShopContent();
     await this.seedBlogContent();
+    await this.seedVisualContent();
   }
 
   private async seedRoles() {
@@ -422,5 +452,114 @@ export class SeedService implements OnModuleInit {
     }
 
     this.logger.log(`Seeded ${BLOG_SEED.length} blog posts`);
+  }
+
+  private async seedVisualContent() {
+    await this.itemModel.updateOne(
+      { slug: 'margherita-del-huerto', $or: [{ imageUrl: { $exists: false } }, { imageUrl: null }, { imageUrl: '' }] },
+      { $set: { imageUrl: IMAGES.pizza } },
+    );
+    await this.itemModel.updateOne(
+      { slug: 'colibri-verde', $or: [{ imageUrl: { $exists: false } }, { imageUrl: null }, { imageUrl: '' }] },
+      { $set: { imageUrl: IMAGES.herbs } },
+    );
+    await this.itemModel.updateOne(
+      { slug: 'tagliatelle-al-pesto', $or: [{ imageUrl: { $exists: false } }, { imageUrl: null }, { imageUrl: '' }] },
+      { $set: { imageUrl: IMAGES.pasta } },
+    );
+    await this.itemModel.updateOne(
+      {
+        slug: 'ravioli-de-ricotta-y-espinaca',
+        $or: [{ imageUrl: { $exists: false } }, { imageUrl: null }, { imageUrl: '' }],
+      },
+      { $set: { imageUrl: IMAGES.pasta } },
+    );
+
+    await this.shopProductModel.updateMany(
+      { $or: [{ imageUrls: { $size: 0 } }, { imageUrls: { $exists: false } }] },
+      { $set: { imageUrls: [IMAGES.art] } },
+    );
+
+    if ((await this.bannerModel.countDocuments()) === 0) {
+      await this.bannerModel.create([
+        {
+          title: 'Alma Jardín',
+          subtitle: 'Cocina de autor entre árboles y colibríes',
+          imageUrl: IMAGES.heroGarden,
+          ctaLabel: 'Reservar mesa',
+          ctaHref: '/reservar',
+          placement: 'home_hero',
+          orderIndex: 0,
+          isActive: true,
+        },
+        {
+          title: 'Una mesa en el jardín',
+          subtitle: 'Ambiente íntimo, fuego lento y luz filtrada',
+          imageUrl: IMAGES.dining,
+          ctaLabel: 'Ver menú',
+          ctaHref: '/menu',
+          placement: 'home_mid',
+          orderIndex: 1,
+          isActive: true,
+        },
+      ]);
+      this.logger.log('Banners seeded');
+    }
+
+    if ((await this.featuredModel.countDocuments()) === 0) {
+      await this.featuredModel.create([
+        {
+          title: 'Arte del jardín',
+          subtitle: 'Tienda',
+          body: 'Obras inspiradas en la naturaleza y el vuelo del colibrí.',
+          imageUrl: IMAGES.art,
+          ctaLabel: 'Explorar tienda',
+          ctaHref: '/tienda',
+          orderIndex: 0,
+          isActive: true,
+        },
+        {
+          title: 'Historias del huerto',
+          subtitle: 'Blog',
+          body: 'Recetas, eventos y la vida detrás de cada servicio.',
+          imageUrl: IMAGES.gardenPath,
+          ctaLabel: 'Leer el blog',
+          ctaHref: '/blog',
+          orderIndex: 1,
+          isActive: true,
+        },
+      ]);
+      this.logger.log('Featured sections seeded');
+    }
+
+    if ((await this.testimonialModel.countDocuments()) === 0) {
+      await this.testimonialModel.create([
+        {
+          quote:
+            'Sentí que cenábamos dentro de un jardín vivo. La pizza Colibrí verde es inolvidable.',
+          authorName: 'María Fernanda',
+          authorRole: 'Visitante frecuente',
+          orderIndex: 0,
+          isActive: true,
+        },
+        {
+          quote:
+            'El ambiente, el servicio y los platos tienen la misma delicadeza: precisa y cálida.',
+          authorName: 'Andrés R.',
+          authorRole: 'Cena de aniversario',
+          orderIndex: 1,
+          isActive: true,
+        },
+        {
+          quote:
+            'Un refugio verde con cocina de verdad. Volveremos por el ravioli y el atardecer.',
+          authorName: 'Camila & Diego',
+          authorRole: 'Huéspedes del jardín',
+          orderIndex: 2,
+          isActive: true,
+        },
+      ]);
+      this.logger.log('Testimonials seeded');
+    }
   }
 }

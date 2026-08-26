@@ -39,6 +39,11 @@ const NAV_ITEMS = [
     permission: 'blog_posts.read' as const,
   },
   {
+    href: '/admin/content',
+    label: 'Contenido visual',
+    permission: 'banners.read' as const,
+  },
+  {
     href: '/admin/reservations',
     label: 'Reservas',
     permission: 'reservations.read' as const,

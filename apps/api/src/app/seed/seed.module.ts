@@ -2,7 +2,12 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from '../auth/auth.module';
 import { Admin, AdminSchema } from '../schemas/admin.schema';
+import { Banner, BannerSchema } from '../schemas/banner.schema';
 import { BlogPost, BlogPostSchema } from '../schemas/blog-post.schema';
+import {
+  FeaturedSection,
+  FeaturedSectionSchema,
+} from '../schemas/featured-section.schema';
 import {
   MenuCategory,
   MenuCategorySchema,
@@ -18,6 +23,7 @@ import {
   ShopCategorySchema,
 } from '../schemas/shop-category.schema';
 import { ShopProduct, ShopProductSchema } from '../schemas/shop-product.schema';
+import { Testimonial, TestimonialSchema } from '../schemas/testimonial.schema';
 import { SeedService } from './seed.service';
 
 @Module({
@@ -32,6 +38,9 @@ import { SeedService } from './seed.service';
       { name: ShopCategory.name, schema: ShopCategorySchema },
       { name: ShopProduct.name, schema: ShopProductSchema },
       { name: BlogPost.name, schema: BlogPostSchema },
+      { name: Banner.name, schema: BannerSchema },
+      { name: FeaturedSection.name, schema: FeaturedSectionSchema },
+      { name: Testimonial.name, schema: TestimonialSchema },
     ]),
   ],
   providers: [SeedService],

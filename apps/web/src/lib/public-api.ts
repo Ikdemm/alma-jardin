@@ -1,8 +1,10 @@
 import type {
+  BannerPublic,
   BlogCategory,
   BlogPostPublic,
   CreateContactInput,
   CreateReservationInput,
+  FeaturedSectionPublic,
   MenuCategoryPublic,
   MenuItemPublic,
   ReservationPublic,
@@ -10,6 +12,7 @@ import type {
   ContactMessagePublic,
   ShopCategoryPublic,
   ShopProductPublic,
+  TestimonialPublic,
 } from '@alma-jardin/shared';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3333/api';
@@ -76,6 +79,18 @@ export function getFeaturedShopProducts(): Promise<ShopProductPublic[] | null> {
 
 export function getShopProductBySlug(slug: string): Promise<ShopProductPublic | null> {
   return publicFetch(`/shop/products/by-slug/${encodeURIComponent(slug)}`);
+}
+
+export function getBanners(): Promise<BannerPublic[] | null> {
+  return publicFetch('/content/banners');
+}
+
+export function getFeaturedSections(): Promise<FeaturedSectionPublic[] | null> {
+  return publicFetch('/content/featured-sections');
+}
+
+export function getTestimonials(): Promise<TestimonialPublic[] | null> {
+  return publicFetch('/content/testimonials');
 }
 
 export async function createReservation(

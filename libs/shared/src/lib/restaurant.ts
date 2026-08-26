@@ -155,3 +155,36 @@ export interface ShopProductPublic {
   whatsappInquiryMessage?: string;
 }
 
+export type BannerPlacement = 'home_hero' | 'home_mid';
+
+export interface BannerPublic {
+  id: string;
+  title: string;
+  subtitle?: string;
+  imageUrl: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  placement: BannerPlacement;
+  orderIndex: number;
+}
+
+export interface FeaturedSectionPublic {
+  id: string;
+  title: string;
+  subtitle?: string;
+  body?: string;
+  imageUrl?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  orderIndex: number;
+}
+
+export interface TestimonialPublic {
+  id: string;
+  quote: string;
+  authorName: string;
+  authorRole?: string;
+  orderIndex: number;
+}
+
+

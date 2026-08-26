@@ -7,6 +7,7 @@ import { AdminsModule } from './admins/admins.module';
 import { AuthModule } from './auth/auth.module';
 import { BlogModule } from './blog/blog.module';
 import { ContactModule } from './contact/contact.module';
+import { ContentModule } from './content/content.module';
 import { DatabaseModule } from './database/database.module';
 import { HealthModule } from './health/health.module';
 import { MenuModule } from './menu/menu.module';
@@ -32,6 +33,7 @@ import { ShopModule } from './shop/shop.module';
     MenuModule,
     ShopModule,
     BlogModule,
+    ContentModule,
     ReservationsModule,
     ContactModule,
     HealthModule,

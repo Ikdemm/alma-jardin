@@ -18,9 +18,13 @@ const LINKS = [
 export function SiteHeader({ siteName }: { siteName: string }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const isHome = pathname === '/';
 
   return (
-    <header className={styles.header}>
+    <header
+      className={styles.header}
+      data-home={isHome ? 'true' : 'false'}
+    >
       <div className={styles.inner}>
         <Link href="/" className={styles.brand} onClick={() => setOpen(false)}>
           <ColibriMark className={styles.mark} />
