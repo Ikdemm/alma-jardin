@@ -17,6 +17,7 @@ import { RolesModule } from './roles/roles.module';
 import { SeedModule } from './seed/seed.module';
 import { SettingsModule } from './settings/settings.module';
 import { ShopModule } from './shop/shop.module';
+import { UploadsModule } from './uploads/uploads.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ShopModule } from './shop/shop.module';
     }),
     DatabaseModule,
     NotificationsModule,
+    UploadsModule,
     AuthModule,
     AdminsModule,
     RolesModule,

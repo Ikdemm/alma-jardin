@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import type { ShopCategoryPublic, ShopProductPublic } from '@alma-jardin/shared';
+import { MultiImageUpload } from '@/components/admin/image-upload';
 import { formatPriceCents, MENU_ITEM_STATUS_LABELS } from '@/lib/format';
 
 export default function ShopProductsAdminPage() {
@@ -19,7 +20,7 @@ export default function ShopProductsAdminPage() {
     medium: '',
     dimensions: '',
     priceCents: 0,
-    imageUrls: '',
+    imageUrls: [] as string[],
     featured: false,
   });
 
@@ -63,12 +64,7 @@ export default function ShopProductsAdminPage() {
         medium: form.medium || undefined,
         dimensions: form.dimensions || undefined,
         priceCents: Number(form.priceCents),
-        imageUrls: form.imageUrls
-          ? form.imageUrls
-              .split('\n')
-              .map((url) => url.trim())
-              .filter(Boolean)
-          : [],
+        imageUrls: form.imageUrls,
         featured: form.featured,
       }),
     });
@@ -89,7 +85,7 @@ export default function ShopProductsAdminPage() {
       medium: '',
       dimensions: '',
       priceCents: 0,
-      imageUrls: '',
+      imageUrls: [],
       featured: false,
     }));
     await loadData();
@@ -191,12 +187,12 @@ export default function ShopProductsAdminPage() {
             }))
           }
         />
-        <textarea
-          rows={2}
-          placeholder="URLs de imagen (una por línea)"
-          value={form.imageUrls}
-          onChange={(event) =>
-            setForm((current) => ({ ...current, imageUrls: event.target.value }))
+        <MultiImageUpload
+          label="Imágenes de la obra"
+          folder="shop"
+          values={form.imageUrls}
+          onChange={(urls) =>
+            setForm((current) => ({ ...current, imageUrls: urls }))
           }
         />
         <label style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>

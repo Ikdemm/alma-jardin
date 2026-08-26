@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { MenuCategoryPublic, MenuItemPublic } from '@alma-jardin/shared';
+import { ImageUpload } from '@/components/admin/image-upload';
 
 export default function EditMenuItemPage() {
   const params = useParams<{ id: string }>();
@@ -141,10 +142,11 @@ export default function EditMenuItemPage() {
             setForm({ ...form, priceCents: Number(event.target.value) })
           }
         />
-        <input
-          placeholder="URL de imagen"
+        <ImageUpload
+          label="Imagen del plato"
+          folder="menu"
           value={form.imageUrl ?? ''}
-          onChange={(event) => setForm({ ...form, imageUrl: event.target.value })}
+          onChange={(url) => setForm({ ...form, imageUrl: url })}
         />
         <select
           value={form.status}

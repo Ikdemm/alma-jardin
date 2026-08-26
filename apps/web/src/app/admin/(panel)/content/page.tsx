@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { ImageUpload } from '@/components/admin/image-upload';
 
 type BannerRow = {
   id: string;
@@ -93,6 +94,12 @@ export default function ContentAdminPage() {
   async function createBanner(event: React.FormEvent) {
     event.preventDefault();
     setError(null);
+
+    if (!bannerForm.imageUrl) {
+      setError('Sube una imagen para el banner');
+      return;
+    }
+
     const response = await fetch('/api/admin/content/admin/banners', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -233,13 +240,11 @@ export default function ContentAdminPage() {
               setBannerForm({ ...bannerForm, subtitle: event.target.value })
             }
           />
-          <input
-            required
-            placeholder="URL de imagen"
+          <ImageUpload
+            label="Imagen del banner"
+            folder="banners"
             value={bannerForm.imageUrl}
-            onChange={(event) =>
-              setBannerForm({ ...bannerForm, imageUrl: event.target.value })
-            }
+            onChange={(url) => setBannerForm({ ...bannerForm, imageUrl: url })}
           />
           <input
             placeholder="CTA label"
@@ -335,11 +340,12 @@ export default function ContentAdminPage() {
               setFeaturedForm({ ...featuredForm, body: event.target.value })
             }
           />
-          <input
-            placeholder="URL de imagen"
+          <ImageUpload
+            label="Imagen de la sección"
+            folder="featured"
             value={featuredForm.imageUrl}
-            onChange={(event) =>
-              setFeaturedForm({ ...featuredForm, imageUrl: event.target.value })
+            onChange={(url) =>
+              setFeaturedForm({ ...featuredForm, imageUrl: url })
             }
           />
           <input

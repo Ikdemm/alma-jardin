@@ -51,3 +51,6 @@ out
 # Environment
 .env
 .env.local
+# Local upload fallback
+uploads/*
+!uploads/.gitkeep

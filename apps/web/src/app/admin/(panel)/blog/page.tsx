@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import type { BlogCategory, BlogPostPublic, BlogPostStatus } from '@alma-jardin/shared';
 import { BLOG_CATEGORIES } from '@alma-jardin/shared';
+import { ImageUpload } from '@/components/admin/image-upload';
 import { BLOG_CATEGORY_LABELS, BLOG_STATUS_LABELS } from '@/lib/format';
 
 const emptyForm = {
@@ -96,12 +97,11 @@ export default function BlogAdminPage() {
             </option>
           ))}
         </select>
-        <input
-          placeholder="URL de portada"
+        <ImageUpload
+          label="Portada"
+          folder="blog"
           value={form.coverImageUrl}
-          onChange={(event) =>
-            setForm({ ...form, coverImageUrl: event.target.value })
-          }
+          onChange={(url) => setForm({ ...form, coverImageUrl: url })}
         />
         <select
           value={form.status}

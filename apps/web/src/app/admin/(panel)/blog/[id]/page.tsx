@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { BlogCategory, BlogPostPublic, BlogPostStatus } from '@alma-jardin/shared';
 import { BLOG_CATEGORIES } from '@alma-jardin/shared';
+import { ImageUpload } from '@/components/admin/image-upload';
 import { BLOG_CATEGORY_LABELS } from '@/lib/format';
 
 export default function EditBlogPostPage() {
@@ -128,12 +129,11 @@ export default function EditBlogPostPage() {
             </option>
           ))}
         </select>
-        <input
-          placeholder="URL de portada"
+        <ImageUpload
+          label="Portada"
+          folder="blog"
           value={form.coverImageUrl ?? ''}
-          onChange={(event) =>
-            setForm({ ...form, coverImageUrl: event.target.value })
-          }
+          onChange={(url) => setForm({ ...form, coverImageUrl: url })}
         />
         <select
           value={form.status}

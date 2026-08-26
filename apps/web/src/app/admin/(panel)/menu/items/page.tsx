@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import type { MenuCategoryPublic, MenuItemPublic } from '@alma-jardin/shared';
+import { ImageUpload } from '@/components/admin/image-upload';
 import { formatPriceCents, MENU_ITEM_STATUS_LABELS } from '@/lib/format';
 
 export default function MenuItemsAdminPage() {
@@ -148,11 +149,12 @@ export default function MenuItemsAdminPage() {
             }))
           }
         />
-        <input
-          placeholder="URL de imagen"
+        <ImageUpload
+          label="Imagen del plato"
+          folder="menu"
           value={form.imageUrl}
-          onChange={(event) =>
-            setForm((current) => ({ ...current, imageUrl: event.target.value }))
+          onChange={(url) =>
+            setForm((current) => ({ ...current, imageUrl: url }))
           }
         />
         <input

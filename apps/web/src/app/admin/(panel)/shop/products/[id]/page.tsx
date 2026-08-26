@@ -4,13 +4,13 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { ShopCategoryPublic, ShopProductPublic } from '@alma-jardin/shared';
+import { MultiImageUpload } from '@/components/admin/image-upload';
 
 export default function EditShopProductPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const [categories, setCategories] = useState<ShopCategoryPublic[]>([]);
   const [form, setForm] = useState<ShopProductPublic | null>(null);
-  const [imageUrlsText, setImageUrlsText] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -27,9 +27,7 @@ export default function EditShopProductPage() {
           throw new Error('No se pudieron cargar categorías');
         }
 
-        const product = (await productResponse.json()) as ShopProductPublic;
-        setForm(product);
-        setImageUrlsText((product.imageUrls ?? []).join('\n'));
+        setForm(await productResponse.json());
         setCategories(await categoriesResponse.json());
       })
       .catch((err: Error) => setError(err.message));
@@ -45,13 +43,7 @@ export default function EditShopProductPage() {
     const response = await fetch(`/api/admin/shop/admin/products/${params.id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...form,
-        imageUrls: imageUrlsText
-          .split('\n')
-          .map((url) => url.trim())
-          .filter(Boolean),
-      }),
+      body: JSON.stringify(form),
     });
 
     setSaving(false);
@@ -168,11 +160,11 @@ export default function EditShopProductPage() {
             setForm({ ...form, priceCents: Number(event.target.value) })
           }
         />
-        <textarea
-          rows={3}
-          placeholder="URLs de imagen (una por línea)"
-          value={imageUrlsText}
-          onChange={(event) => setImageUrlsText(event.target.value)}
+        <MultiImageUpload
+          label="Imágenes de la obra"
+          folder="shop"
+          values={form.imageUrls ?? []}
+          onChange={(urls) => setForm({ ...form, imageUrls: urls })}
         />
         <select
           value={form.status}
