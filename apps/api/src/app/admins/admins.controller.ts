@@ -61,4 +61,10 @@ export class AdminsController {
   unblock(@Param('id') id: string, @CurrentAdmin() actor: AuthAdmin) {
     return this.adminsService.unblock(id, actor);
   }
+
+  @RequirePermissions('admins.update' satisfies PermissionCode)
+  @Post(':id/resend-invite')
+  resendInvite(@Param('id') id: string, @CurrentAdmin() actor: AuthAdmin) {
+    return this.adminsService.resendInvite(id, actor);
+  }
 }

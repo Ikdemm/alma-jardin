@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { ReservationPublic, ReservationStatus } from '@alma-jardin/shared';
 import { RESERVATION_STATUS_LABELS } from '@/lib/format';
 
@@ -15,6 +15,7 @@ const STATUS_OPTIONS: Array<ReservationStatus | 'all'> = [
 export default function ReservationsAdminPage() {
   const [reservations, setReservations] = useState<ReservationPublic[]>([]);
   const [status, setStatus] = useState<ReservationStatus | 'all'>('pending');
+  const [search, setSearch] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -40,6 +41,23 @@ export default function ReservationsAdminPage() {
       setLoading(false);
     });
   }, []);
+
+  const filtered = useMemo(() => {
+    const term = search.trim().toLowerCase();
+    if (!term) return reservations;
+    return reservations.filter((reservation) => {
+      const haystack = [
+        reservation.contactName,
+        reservation.contactPhone,
+        reservation.contactEmail ?? '',
+        reservation.notes ?? '',
+        reservation.date,
+      ]
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(term);
+    });
+  }, [reservations, search]);
 
   async function updateStatus(id: string, nextStatus: ReservationStatus) {
     setError(null);
@@ -71,29 +89,39 @@ export default function ReservationsAdminPage() {
         }}
       >
         <h1 style={{ margin: 0 }}>Reservas</h1>
-        <label style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-          Estado
-          <select
-            value={status}
-            onChange={async (event) => {
-              const nextStatus = event.target.value as ReservationStatus | 'all';
-              setStatus(nextStatus);
-              try {
-                await loadReservations(nextStatus);
-              } catch (err) {
-                setError(err instanceof Error ? err.message : 'Error');
-              }
-            }}
-          >
-            {STATUS_OPTIONS.map((option) => (
-              <option key={option} value={option}>
-                {option === 'all'
-                  ? 'Todas'
-                  : RESERVATION_STATUS_LABELS[option] ?? option}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <label style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            Buscar
+            <input
+              value={search}
+              placeholder="Nombre, teléfono, correo…"
+              onChange={(event) => setSearch(event.target.value)}
+            />
+          </label>
+          <label style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            Estado
+            <select
+              value={status}
+              onChange={async (event) => {
+                const nextStatus = event.target.value as ReservationStatus | 'all';
+                setStatus(nextStatus);
+                try {
+                  await loadReservations(nextStatus);
+                } catch (err) {
+                  setError(err instanceof Error ? err.message : 'Error');
+                }
+              }}
+            >
+              {STATUS_OPTIONS.map((option) => (
+                <option key={option} value={option}>
+                  {option === 'all'
+                    ? 'Todas'
+                    : RESERVATION_STATUS_LABELS[option] ?? option}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
       </div>
 
       {error ? <p style={{ color: '#9a3412' }}>{error}</p> : null}
@@ -113,12 +141,12 @@ export default function ReservationsAdminPage() {
             </tr>
           </thead>
           <tbody>
-            {reservations.length === 0 ? (
+            {filtered.length === 0 ? (
               <tr>
                 <td colSpan={7}>No hay reservas con este filtro.</td>
               </tr>
             ) : (
-              reservations.map((reservation) => (
+              filtered.map((reservation) => (
                 <tr key={reservation.id}>
                   <td>{reservation.date}</td>
                   <td>{reservation.time}</td>

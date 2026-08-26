@@ -5,12 +5,14 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { randomBytes } from 'crypto';
 import { Model, Types } from 'mongoose';
 import type {
   AdminSummary,
   AuthAdmin,
   PaginatedResponse,
 } from '@alma-jardin/shared';
+import { AuthService } from '../auth/auth.service';
 import { PasswordService } from '../common/password.service';
 import { Admin, AdminDocument } from '../schemas/admin.schema';
 import { Role, RoleDocument } from '../schemas/role.schema';
@@ -20,12 +22,18 @@ import {
   UpdateAdminDto,
 } from './dto/admin.dto';
 
+export type CreateAdminResult = AdminSummary & {
+  inviteSent?: boolean;
+  invited?: boolean;
+};
+
 @Injectable()
 export class AdminsService {
   constructor(
     @InjectModel(Admin.name) private readonly adminModel: Model<AdminDocument>,
     @InjectModel(Role.name) private readonly roleModel: Model<RoleDocument>,
     private readonly passwordService: PasswordService,
+    private readonly authService: AuthService,
   ) {}
 
   async list(query: ListAdminsQueryDto): Promise<PaginatedResponse<AdminSummary>> {
@@ -74,7 +82,9 @@ export class AdminsService {
     return this.toSummary(admin);
   }
 
-  async create(dto: CreateAdminDto, actor: AuthAdmin): Promise<AdminSummary> {
+  async create(dto: CreateAdminDto, actor: AuthAdmin): Promise<CreateAdminResult> {
+    void actor;
+
     const existing = await this.adminModel.findOne({
       email: dto.email.toLowerCase(),
     });
@@ -85,9 +95,14 @@ export class AdminsService {
 
     await this.ensureRolesExist(dto.roleIds);
 
-    const password = dto.password ?? this.generateTemporaryPassword();
-    const strengthError = this.passwordService.validateStrength(password);
+    const invite = !dto.password;
+    let password = dto.password;
 
+    if (invite) {
+      password = `Inv${randomBytes(18).toString('base64url')}!a1`;
+    }
+
+    const strengthError = this.passwordService.validateStrength(password!);
     if (strengthError) {
       throw new BadRequestException(strengthError);
     }
@@ -97,14 +112,78 @@ export class AdminsService {
       lastName: dto.lastName.trim(),
       email: dto.email.toLowerCase().trim(),
       phone: dto.phone?.trim(),
-      passwordHash: await this.passwordService.hash(password),
+      passwordHash: await this.passwordService.hash(password!),
       roleIds: dto.roleIds.map((id) => new Types.ObjectId(id)),
       directPermissions: dto.directPermissions ?? [],
-      status: dto.password ? 'active' : 'pending',
+      status: invite ? 'pending' : 'active',
       isSuperAdmin: false,
     });
 
-    return this.toSummary(admin);
+    if (!invite) {
+      return this.toSummary(admin);
+    }
+
+    const token = await this.authService.issueResetToken(
+      admin,
+      1000 * 60 * 60 * 24 * 7,
+    );
+    const inviteSent = await this.authService.sendPasswordEmail({
+      to: admin.email,
+      firstName: admin.firstName,
+      token,
+      kind: 'invite',
+    });
+
+    return {
+      ...this.toSummary(admin),
+      invited: true,
+      inviteSent,
+    };
+  }
+
+  async resendInvite(
+    id: string,
+    actor: AuthAdmin,
+  ): Promise<CreateAdminResult> {
+    void actor;
+    const admin = await this.adminModel
+      .findById(id)
+      .select('+resetPasswordToken +resetPasswordExpiresAt');
+
+    if (!admin) {
+      throw new NotFoundException('Administrador no encontrado');
+    }
+
+    if (admin.isSuperAdmin) {
+      throw new BadRequestException('No aplica para el super administrador');
+    }
+
+    if (admin.status === 'blocked' || admin.status === 'inactive') {
+      throw new BadRequestException('No se puede invitar una cuenta bloqueada o inactiva');
+    }
+
+    if (admin.status !== 'pending') {
+      throw new BadRequestException(
+        'Solo se pueden reenviar invitaciones a cuentas pendientes',
+      );
+    }
+
+    const token = await this.authService.issueResetToken(
+      admin,
+      1000 * 60 * 60 * 24 * 7,
+    );
+    const inviteSent = await this.authService.sendPasswordEmail({
+      to: admin.email,
+      firstName: admin.firstName,
+      token,
+      kind: 'invite',
+    });
+
+    return {
+      ...this.toSummary(admin),
+      invited: true,
+      inviteSent,
+    };
   }
 
   async update(
@@ -173,10 +252,6 @@ export class AdminsService {
     if (count !== roleIds.length) {
       throw new BadRequestException('Uno o más roles no existen o están inactivos');
     }
-  }
-
-  private generateTemporaryPassword(): string {
-    return `Temp${Math.random().toString(36).slice(2, 10)}1A`;
   }
 
   private toSummary(admin: AdminDocument): AdminSummary {

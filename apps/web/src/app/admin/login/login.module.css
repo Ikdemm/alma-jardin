@@ -56,3 +56,27 @@
   color: #b42318;
   font-size: 0.9rem;
 }
+
+.success {
+  color: #1f6b4a;
+  font-size: 0.9rem;
+}
+
+.footerLink {
+  margin: 1.25rem 0 0;
+  font-size: 0.9rem;
+}
+
+.footerLink a {
+  color: #2d4a3e;
+}
+
+.devHint {
+  font-size: 0.85rem;
+  color: #6b5b4f;
+  word-break: break-all;
+}
+
+.devHint a {
+  color: #2d4a3e;
+}

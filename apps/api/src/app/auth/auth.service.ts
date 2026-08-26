@@ -11,6 +11,7 @@ import { Model } from 'mongoose';
 import type { AuthAdmin, LoginResponse } from '@alma-jardin/shared';
 import { PasswordService } from '../common/password.service';
 import { resolveEffectivePermissions } from '../common/permissions.util';
+import { NotificationsService } from '../notifications/notifications.service';
 import { Admin, AdminDocument } from '../schemas/admin.schema';
 import { Role, RoleDocument } from '../schemas/role.schema';
 import { ForgotPasswordDto, LoginDto, ResetPasswordDto } from './dto/auth.dto';
@@ -23,6 +24,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly passwordService: PasswordService,
     private readonly config: ConfigService,
+    private readonly notifications: NotificationsService,
   ) {}
 
   async login(dto: LoginDto): Promise<LoginResponse> {
@@ -68,22 +70,35 @@ export class AuthService {
     return this.buildAuthAdmin(admin);
   }
 
-  async forgotPassword(dto: ForgotPasswordDto): Promise<{ message: string; resetToken?: string }> {
+  async forgotPassword(
+    dto: ForgotPasswordDto,
+  ): Promise<{ message: string; resetToken?: string; emailSent?: boolean }> {
     const admin = await this.adminModel
       .findOne({ email: dto.email.toLowerCase() })
       .select('+resetPasswordToken +resetPasswordExpiresAt');
 
-    if (!admin) {
-      return { message: 'Si el correo existe, recibirás instrucciones de recuperación' };
+    const genericMessage =
+      'Si el correo existe, recibirás instrucciones de recuperación';
+
+    if (!admin || admin.status === 'blocked' || admin.status === 'inactive') {
+      return { message: genericMessage };
     }
 
-    const token = randomBytes(32).toString('hex');
-    admin.resetPasswordToken = token;
-    admin.resetPasswordExpiresAt = new Date(Date.now() + 1000 * 60 * 60);
-    await admin.save();
+    const token = await this.issueResetToken(admin, 1000 * 60 * 60);
+    const emailSent = await this.sendPasswordEmail({
+      to: admin.email,
+      firstName: admin.firstName,
+      token,
+      kind: 'reset',
+    });
 
-    const response: { message: string; resetToken?: string } = {
-      message: 'Si el correo existe, recibirás instrucciones de recuperación',
+    const response: {
+      message: string;
+      resetToken?: string;
+      emailSent?: boolean;
+    } = {
+      message: genericMessage,
+      emailSent,
     };
 
     if (this.config.get('NODE_ENV') !== 'production') {
@@ -111,6 +126,10 @@ export class AuthService {
       throw new BadRequestException('Token inválido o expirado');
     }
 
+    if (admin.status === 'blocked' || admin.status === 'inactive') {
+      throw new BadRequestException('Esta cuenta no puede activarse');
+    }
+
     admin.passwordHash = await this.passwordService.hash(dto.password);
     admin.resetPasswordToken = undefined;
     admin.resetPasswordExpiresAt = undefined;
@@ -122,6 +141,77 @@ export class AuthService {
     await admin.save();
 
     return { message: 'Contraseña actualizada correctamente' };
+  }
+
+  async issueResetToken(
+    admin: AdminDocument,
+    ttlMs: number,
+  ): Promise<string> {
+    const token = randomBytes(32).toString('hex');
+    admin.resetPasswordToken = token;
+    admin.resetPasswordExpiresAt = new Date(Date.now() + ttlMs);
+    await admin.save();
+    return token;
+  }
+
+  async sendPasswordEmail(input: {
+    to: string;
+    firstName: string;
+    token: string;
+    kind: 'reset' | 'invite';
+  }): Promise<boolean> {
+    const webOrigin = (
+      this.config.get<string>('WEB_ORIGIN') || 'http://localhost:4200'
+    ).replace(/\/$/, '');
+    const link = `${webOrigin}/admin/reset-password?token=${encodeURIComponent(input.token)}`;
+
+    if (input.kind === 'invite') {
+      const subject = 'Activa tu cuenta de administrador — Alma Jardín';
+      const text = [
+        `Hola ${input.firstName},`,
+        '',
+        'Te invitaron a administrar la plataforma de Alma Jardín.',
+        'Define tu contraseña con este enlace (válido 7 días):',
+        link,
+        '',
+        'Si no esperabas este correo, puedes ignorarlo.',
+      ].join('\n');
+
+      return this.notifications.sendMail({
+        to: input.to,
+        subject,
+        text,
+        html: this.notifications.buildEmailHtml(subject, [
+          `Hola ${input.firstName},`,
+          'Te invitaron a administrar la plataforma de Alma Jardín.',
+          `Define tu contraseña aquí: ${link}`,
+          'El enlace es válido durante 7 días.',
+        ]),
+      });
+    }
+
+    const subject = 'Recuperar contraseña — Alma Jardín';
+    const text = [
+      `Hola ${input.firstName},`,
+      '',
+      'Recibimos una solicitud para restablecer tu contraseña de administrador.',
+      'Usa este enlace (válido 1 hora):',
+      link,
+      '',
+      'Si no solicitaste este cambio, ignora este correo.',
+    ].join('\n');
+
+    return this.notifications.sendMail({
+      to: input.to,
+      subject,
+      text,
+      html: this.notifications.buildEmailHtml(subject, [
+        `Hola ${input.firstName},`,
+        'Recibimos una solicitud para restablecer tu contraseña de administrador.',
+        `Restablece tu contraseña aquí: ${link}`,
+        'El enlace es válido durante 1 hora.',
+      ]),
+    });
   }
 
   private async signToken(admin: AdminDocument): Promise<string> {

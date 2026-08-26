@@ -1,6 +1,7 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import styles from './login.module.css';
 
@@ -50,6 +51,7 @@ export default function AdminLoginPage() {
               type="email"
               required
               defaultValue="admin@almajardin.com"
+              autoComplete="username"
             />
           </label>
           <label>
@@ -59,6 +61,7 @@ export default function AdminLoginPage() {
               type="password"
               required
               defaultValue="Admin1234!"
+              autoComplete="current-password"
             />
           </label>
           {error ? <p className={styles.error}>{error}</p> : null}
@@ -66,6 +69,9 @@ export default function AdminLoginPage() {
             {loading ? 'Ingresando…' : 'Iniciar sesión'}
           </button>
         </form>
+        <p className={styles.footerLink}>
+          <Link href="/admin/forgot-password">¿Olvidaste tu contraseña?</Link>
+        </p>
       </div>
     </main>
   );
