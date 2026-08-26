@@ -1,35 +1,86 @@
 .logo {
   display: inline-flex;
   align-items: center;
-  line-height: 0;
+  gap: 0.55rem;
+  line-height: 1;
 }
 
-.image {
+.mark {
+  flex-shrink: 0;
   width: auto;
   height: 100%;
   object-fit: contain;
 }
 
+.wordmark {
+  font-family: var(--font-script), 'Brush Script MT', cursive;
+  font-weight: 400;
+  text-transform: lowercase;
+  line-height: 0.85;
+  transform: translateY(0.06em);
+}
+
+.light {
+  color: #f7f4ed;
+}
+
+.dark {
+  color: #1a231f;
+}
+
 .sm {
+  gap: 0.4rem;
   height: 1.75rem;
 }
 
+.sm .wordmark {
+  font-size: 1.65rem;
+}
+
 .md {
+  gap: 0.45rem;
   height: 2.25rem;
 }
 
+.md .wordmark {
+  font-size: 2rem;
+}
+
 .lg {
+  gap: 0.5rem;
   height: 3rem;
 }
 
+.lg .wordmark {
+  font-size: 2.6rem;
+}
+
 .hero {
+  gap: 0.65rem;
   height: clamp(3.5rem, 8vw, 4.75rem);
 }
 
-.dark .image {
-  filter: brightness(0) saturate(100%);
+.hero .wordmark {
+  font-size: clamp(2.75rem, 7vw, 4.25rem);
 }
 
-.light .image {
-  filter: none;
+.hero .mark {
+  animation: colibriFloat 4.5s ease-in-out infinite;
+}
+
+@keyframes colibriFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero .mark {
+    animation: none;
+  }
 }

@@ -8,12 +8,14 @@ type AlmaLogoProps = {
   priority?: boolean;
 };
 
-const HEIGHT = {
+const MARK_HEIGHT = {
   sm: 28,
   md: 36,
   lg: 48,
   hero: 72,
 } as const;
+
+const MARK_ASPECT = 127 / 200;
 
 export function AlmaLogo({
   className,
@@ -21,8 +23,8 @@ export function AlmaLogo({
   size = 'md',
   priority = false,
 }: AlmaLogoProps) {
-  const height = HEIGHT[size];
-  const width = Math.round((height * 98) / 150);
+  const markHeight = MARK_HEIGHT[size];
+  const markWidth = Math.round(markHeight * MARK_ASPECT);
 
   return (
     <span
@@ -31,13 +33,15 @@ export function AlmaLogo({
         .join(' ')}
     >
       <Image
-        src="/logo-alma.png"
-        alt="alma"
-        width={width}
-        height={height}
+        src="/colibri-icon.png"
+        alt=""
+        aria-hidden
+        width={markWidth}
+        height={markHeight}
         priority={priority}
-        className={styles.image}
+        className={styles.mark}
       />
+      <span className={styles.wordmark}>alma</span>
     </span>
   );
 }

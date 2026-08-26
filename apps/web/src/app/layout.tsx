@@ -1,10 +1,17 @@
 import type { Metadata, Viewport } from 'next';
+import { Allura } from 'next/font/google';
 import {
   DEFAULT_DESCRIPTION,
   SITE_NAME,
   getSiteUrl,
 } from '@/lib/seo';
 import './global.css';
+
+const script = Allura({
+  subsets: ['latin'],
+  weight: ['400'],
+  variable: '--font-script',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
@@ -56,10 +63,12 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
+      { url: '/favicon.ico', sizes: 'any' },
       { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
       { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
     ],
     apple: [{ url: '/icon-192.png', sizes: '192x192', type: 'image/png' }],
+    shortcut: ['/favicon.ico'],
   },
 };
 
@@ -73,7 +82,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es">
+    <html lang="es" className={script.variable}>
       <body>{children}</body>
     </html>
   );
