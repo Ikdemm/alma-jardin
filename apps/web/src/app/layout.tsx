@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import {
   DEFAULT_DESCRIPTION,
   SITE_NAME,
+  SITE_TITLE_SUFFIX,
   getSiteUrl,
 } from '@/lib/seo';
 import './global.css';
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
   title: {
     default: SITE_NAME,
-    template: `%s · ${SITE_NAME}`,
+    template: `%s · ${SITE_TITLE_SUFFIX}`,
   },
   description: DEFAULT_DESCRIPTION,
   applicationName: SITE_NAME,

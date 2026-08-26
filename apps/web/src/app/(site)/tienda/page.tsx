@@ -25,7 +25,7 @@ export default async function TiendaPage() {
     <div className={styles.container}>
       <section className={styles.pageHero}>
         <p className={styles.eyebrow}>Arte</p>
-        <h1>Tienda del jardín</h1>
+        <h1>Tienda de arte</h1>
         <p className={styles.sectionLead}>
           Obras inspiradas en la naturaleza, el colibrí y la cocina de Alma
           Jardín. Consulta disponibilidad por WhatsApp.

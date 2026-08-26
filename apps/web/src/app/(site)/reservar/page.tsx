@@ -15,7 +15,7 @@ export default function ReservarPage() {
     <div className={styles.container}>
       <section className={styles.pageHero}>
         <p className={styles.eyebrow}>Reservas</p>
-        <h1>Tu mesa en el jardín</h1>
+        <h1>Reservar mesa</h1>
         <p className={styles.sectionLead}>
           Completa el formulario y te contactaremos para confirmar disponibilidad.
           Si prefieres, también puedes escribirnos por WhatsApp.

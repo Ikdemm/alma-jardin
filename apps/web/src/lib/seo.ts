@@ -7,6 +7,9 @@ import type {
 
 export const SITE_NAME = 'Alma Jardín';
 
+/** Shorter suffix for inner-page browser titles (home keeps full SITE_NAME). */
+export const SITE_TITLE_SUFFIX = 'Alma';
+
 export const DEFAULT_DESCRIPTION =
   'Restaurante Alma Jardín — cocina gourmet en un jardín vivo, inspirada en la naturaleza y el vuelo del colibrí.';
 
