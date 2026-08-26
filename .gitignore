@@ -55,3 +55,7 @@ out
 uploads/*
 !uploads/.gitkeep
 apps/web/tsconfig.tsbuildinfo
+
+# Local MongoDB (cloud dev)
+.mongo-data/
+.mongo-logs/
