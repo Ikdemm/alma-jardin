@@ -32,7 +32,7 @@ export function SiteHeader() {
           aria-label="Alma Jardín — inicio"
           onClick={() => setOpen(false)}
         >
-          <AlmaLogo tone={isHome ? 'light' : 'dark'} size="md" priority={isHome} />
+          <AlmaLogo tone={isHome ? 'light' : 'dark'} size="md" />
         </Link>
 
         <button

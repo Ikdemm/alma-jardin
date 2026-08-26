@@ -1,35 +1,91 @@
 .logo {
   display: inline-flex;
   align-items: center;
-  line-height: 0;
+  gap: 0.65rem;
+  font-family: var(--font-display), Georgia, serif;
+  line-height: 1;
+  letter-spacing: 0.02em;
 }
 
-.image {
-  width: auto;
-  height: 100%;
-  object-fit: contain;
+.mark {
+  flex-shrink: 0;
+}
+
+.wordmark {
+  font-weight: 500;
+  text-transform: lowercase;
+}
+
+.light {
+  color: #f7f4ed;
+}
+
+.light .mark {
+  color: #a8c4b0;
+}
+
+.dark {
+  color: #1a231f;
+}
+
+.dark .mark {
+  color: #4a7c59;
 }
 
 .sm {
-  height: 1.75rem;
+  gap: 0.45rem;
+  font-size: 1rem;
+}
+
+.sm .mark {
+  width: 1.75rem;
+  height: 1.3rem;
 }
 
 .md {
-  height: 2.25rem;
+  gap: 0.55rem;
+  font-size: 1.25rem;
+}
+
+.md .mark {
+  width: 2rem;
+  height: 1.5rem;
 }
 
 .lg {
-  height: 3rem;
+  gap: 0.65rem;
+  font-size: 1.5rem;
+}
+
+.lg .mark {
+  width: 2.4rem;
+  height: 1.8rem;
 }
 
 .hero {
-  height: clamp(3.5rem, 8vw, 4.75rem);
+  gap: 0.75rem;
+  font-size: clamp(2rem, 5vw, 3rem);
 }
 
-.dark .image {
-  filter: brightness(0) saturate(100%);
+.hero .mark {
+  width: clamp(2.4rem, 6vw, 2.8rem);
+  height: clamp(1.8rem, 4.5vw, 2.1rem);
+  animation: colibriFloat 4.5s ease-in-out infinite;
 }
 
-.light .image {
-  filter: none;
+@keyframes colibriFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero .mark {
+    animation: none;
+  }
 }
