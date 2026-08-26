@@ -83,7 +83,6 @@ export default function AdminsPage() {
         filterOptions={STATUS_OPTIONS}
         onFilterChange={setStatus}
         onSubmit={() => {
-          setPage(1);
           setQuery({ search, status, page: 1 });
         }}
       />
@@ -127,7 +126,6 @@ export default function AdminsPage() {
         totalPages={data.totalPages}
         total={data.total}
         onPageChange={(nextPage) => {
-          setPage(nextPage);
           setQuery((current) => ({ ...current, page: nextPage }));
         }}
       />
