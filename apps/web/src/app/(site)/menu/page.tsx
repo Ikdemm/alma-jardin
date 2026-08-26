@@ -25,7 +25,7 @@ export default async function MenuPage() {
     <div className={styles.container}>
       <section className={styles.pageHero}>
         <p className={styles.eyebrow}>Carta</p>
-        <h1>Menú del jardín</h1>
+        <h1>Menú</h1>
         <p className={styles.sectionLead}>
           Entradas del huerto, pizzas de masa madura, pastas artesanales y postres
           inspirados en la naturaleza.

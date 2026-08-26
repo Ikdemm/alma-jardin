@@ -28,7 +28,7 @@ export default async function BlogPage({
     <div className={styles.container}>
       <section className={styles.pageHero}>
         <p className={styles.eyebrow}>Editorial</p>
-        <h1>Blog del jardín</h1>
+        <h1>Blog</h1>
         <p className={styles.sectionLead}>
           Historias, recetas, ingredientes y eventos — la vida detrás de Alma
           Jardín.
