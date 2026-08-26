@@ -94,7 +94,7 @@ export default async function HomePage() {
         <div className={styles.heroOverlay} />
         <div className={styles.heroContent}>
           <div className={styles.brandLockup}>
-            <AlmaLogo tone="light" size="hero" />
+            <AlmaLogo tone="light" size="hero" priority />
           </div>
           <h1>{heroTitle}</h1>
           <p>{heroSubtitle}</p>

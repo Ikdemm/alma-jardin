@@ -1,10 +1,17 @@
 import type { Metadata, Viewport } from 'next';
+import { Allura } from 'next/font/google';
 import {
   DEFAULT_DESCRIPTION,
   SITE_NAME,
   getSiteUrl,
 } from '@/lib/seo';
 import './global.css';
+
+const script = Allura({
+  subsets: ['latin'],
+  weight: ['400'],
+  variable: '--font-script',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
@@ -75,7 +82,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es">
+    <html lang="es" className={script.variable}>
       <body>{children}</body>
     </html>
   );
