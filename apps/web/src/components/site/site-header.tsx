@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { ColibriMark } from './colibri-mark';
+import { AlmaLogo } from './alma-logo';
 import styles from './site-header.module.css';
 
 const LINKS = [
@@ -15,7 +15,7 @@ const LINKS = [
   { href: '/contacto', label: 'Contacto' },
 ];
 
-export function SiteHeader({ siteName }: { siteName: string }) {
+export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const isHome = pathname === '/';
@@ -26,9 +26,13 @@ export function SiteHeader({ siteName }: { siteName: string }) {
       data-home={isHome ? 'true' : 'false'}
     >
       <div className={styles.inner}>
-        <Link href="/" className={styles.brand} onClick={() => setOpen(false)}>
-          <ColibriMark className={styles.mark} />
-          <span>{siteName}</span>
+        <Link
+          href="/"
+          className={styles.brand}
+          aria-label="Alma Jardín — inicio"
+          onClick={() => setOpen(false)}
+        >
+          <AlmaLogo tone={isHome ? 'light' : 'dark'} size="md" priority={isHome} />
         </Link>
 
         <button

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { RestaurantSettingsPublic } from '@alma-jardin/shared';
 import { whatsappUrl } from '@/lib/format';
-import { ColibriMark } from './colibri-mark';
+import { AlmaLogo } from './alma-logo';
 import styles from './site-footer.module.css';
 
 export function SiteFooter({ settings }: { settings: RestaurantSettingsPublic }) {
@@ -12,8 +12,7 @@ export function SiteFooter({ settings }: { settings: RestaurantSettingsPublic })
       <div className={styles.inner}>
         <div className={styles.brandBlock}>
           <div className={styles.brand}>
-            <ColibriMark className={styles.mark} />
-            <strong>{settings.name}</strong>
+            <AlmaLogo tone="light" size="lg" />
           </div>
           <p>{settings.tagline}</p>
         </div>

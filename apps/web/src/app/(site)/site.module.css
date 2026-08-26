@@ -81,19 +81,8 @@
 .brandLockup {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
   margin-bottom: 1.25rem;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(2rem, 5vw, 3rem);
-  letter-spacing: 0.02em;
   animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.brandLockup svg {
-  width: 2.8rem;
-  height: 2.1rem;
-  color: #a8c4b0;
-  animation: colibriFloat 4.5s ease-in-out infinite;
 }
 
 .heroContent h1 {

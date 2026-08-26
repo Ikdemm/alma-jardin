@@ -23,11 +23,10 @@ export default async function SiteLayout({
   children: React.ReactNode;
 }) {
   const settings = await getPublicSettings();
-  const siteName = settings?.name ?? 'Alma Jardín';
 
   return (
     <div className={`${styles.site} ${display.variable} ${body.variable}`}>
-      <SiteHeader siteName={siteName} />
+      <SiteHeader />
       <main className={styles.main}>{children}</main>
       {settings ? <SiteFooter settings={settings} /> : null}
       {settings ? <WhatsAppFloat settings={settings} /> : null}

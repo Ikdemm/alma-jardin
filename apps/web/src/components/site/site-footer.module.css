@@ -43,17 +43,7 @@
 .brand {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
   margin-bottom: 0.75rem;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 1.2rem;
-  color: #f7f4ed;
-}
-
-.mark {
-  width: 2rem;
-  height: 1.5rem;
-  color: #8faf98;
 }
 
 .links {

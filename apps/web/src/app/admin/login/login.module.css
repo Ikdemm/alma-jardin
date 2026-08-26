@@ -19,6 +19,12 @@
   margin: 0 0 0.5rem;
 }
 
+.logoWrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
 .card p {
   margin: 0 0 1.5rem;
   color: #6b5b4f;
