@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { AlmaLogo } from './alma-logo';
+import { CartIcon } from './cart-icon';
 import styles from './site-header.module.css';
 
 const LINKS = [
@@ -11,7 +12,6 @@ const LINKS = [
   { href: '/menu', label: 'Menú' },
   { href: '/tienda', label: 'Tienda' },
   { href: '/blog', label: 'Blog' },
-  { href: '/reservar', label: 'Reservar' },
   { href: '/contacto', label: 'Contacto' },
 ];
 
@@ -26,25 +26,26 @@ export function SiteHeader() {
       data-home={isHome ? 'true' : 'false'}
     >
       <div className={styles.inner}>
-        <Link
-          href="/"
-          className={styles.brand}
-          aria-label="Alma Jardín — inicio"
-          onClick={() => setOpen(false)}
-        >
-          <AlmaLogo tone={isHome ? 'light' : 'dark'} size="md" priority={isHome} />
-        </Link>
+        <div className={styles.left}>
+          <Link
+            href="/carrito"
+            className={styles.cartLink}
+            aria-label="Ver carrito"
+            data-active={pathname === '/carrito' ? 'true' : 'false'}
+            onClick={() => setOpen(false)}
+          >
+            <CartIcon className={styles.cartIcon} />
+          </Link>
 
-        <button
-          type="button"
-          className={styles.menuToggle}
-          aria-expanded={open}
-          aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
-          onClick={() => setOpen((value) => !value)}
-        >
-          <span />
-          <span />
-        </button>
+          <Link
+            href="/"
+            className={styles.brand}
+            aria-label="Alma Jardín — inicio"
+            onClick={() => setOpen(false)}
+          >
+            <AlmaLogo tone={isHome ? 'light' : 'dark'} size="md" priority={isHome} />
+          </Link>
+        </div>
 
         <nav className={styles.nav} data-open={open ? 'true' : 'false'}>
           {LINKS.map((link) => (
@@ -59,12 +60,33 @@ export function SiteHeader() {
           ))}
           <Link
             href="/reservar"
-            className={styles.cta}
+            className={styles.ctaMobile}
             onClick={() => setOpen(false)}
           >
             Reservar mesa
           </Link>
         </nav>
+
+        <div className={styles.right}>
+          <Link
+            href="/reservar"
+            className={styles.cta}
+            onClick={() => setOpen(false)}
+          >
+            Reservar mesa
+          </Link>
+
+          <button
+            type="button"
+            className={styles.menuToggle}
+            aria-expanded={open}
+            aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
+            onClick={() => setOpen((value) => !value)}
+          >
+            <span />
+            <span />
+          </button>
+        </div>
       </div>
     </header>
   );
