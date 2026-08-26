@@ -1,7 +1,16 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { MenuCard } from '@/components/site/menu-card';
 import { getMenuCategories, getMenuItems } from '@/lib/public-api';
+import { buildPageMetadata } from '@/lib/seo';
 import styles from '../site.module.css';
+
+export const metadata: Metadata = buildPageMetadata({
+  title: 'Menú',
+  description:
+    'Carta de Alma Jardín: entradas del huerto, pizzas, pastas artesanales, postres y bebidas inspiradas en la naturaleza.',
+  path: '/menu',
+});
 
 export default async function MenuPage() {
   const [categories, items] = await Promise.all([

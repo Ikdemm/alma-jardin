@@ -1,5 +1,7 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ColibriMark } from '@/components/site/colibri-mark';
+import { JsonLd } from '@/components/site/json-ld';
 import { MenuCard } from '@/components/site/menu-card';
 import { Reveal } from '@/components/site/reveal';
 import { whatsappUrl } from '@/lib/format';
@@ -10,12 +12,40 @@ import {
   getPublicSettings,
   getTestimonials,
 } from '@/lib/public-api';
+import {
+  DEFAULT_DESCRIPTION,
+  SITE_NAME,
+  buildPageMetadata,
+  restaurantJsonLd,
+} from '@/lib/seo';
 import styles from './site.module.css';
 
 const FALLBACK_HERO =
   'https://images.unsplash.com/photo-1466692476866-aef1dfb1e735?auto=format&fit=crop&w=2000&q=80';
 const FALLBACK_ABOUT =
   'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1600&q=80';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const [settings, banners] = await Promise.all([
+    getPublicSettings(),
+    getBanners(),
+  ]);
+  const heroBanner =
+    (banners ?? []).find((banner) => banner.placement === 'home_hero') ??
+    (banners ?? [])[0];
+
+  return buildPageMetadata({
+    title: settings?.name ?? SITE_NAME,
+    description:
+      settings?.heroSubtitle ||
+      settings?.tagline ||
+      settings?.aboutText ||
+      DEFAULT_DESCRIPTION,
+    path: '/',
+    imageUrl: heroBanner?.imageUrl ?? FALLBACK_HERO,
+    absoluteTitle: true,
+  });
+}
 
 export default async function HomePage() {
   const [settings, featured, banners, featuredSections, testimonials] =
@@ -50,6 +80,11 @@ export default async function HomePage() {
 
   return (
     <>
+      {settings ? (
+        <JsonLd
+          data={restaurantJsonLd(settings, { imageUrl: heroImage })}
+        />
+      ) : null}
       <section className={styles.heroBleed}>
         <div
           className={styles.heroMedia}

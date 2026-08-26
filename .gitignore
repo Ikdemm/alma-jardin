@@ -54,3 +54,4 @@ out
 # Local upload fallback
 uploads/*
 !uploads/.gitkeep
+apps/web/tsconfig.tsbuildinfo

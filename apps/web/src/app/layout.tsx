@@ -1,17 +1,57 @@
 import type { Metadata, Viewport } from 'next';
+import {
+  DEFAULT_DESCRIPTION,
+  SITE_NAME,
+  getSiteUrl,
+} from '@/lib/seo';
 import './global.css';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
   title: {
-    default: 'Alma Jardín',
-    template: '%s · Alma Jardín',
+    default: SITE_NAME,
+    template: `%s · ${SITE_NAME}`,
   },
-  description:
-    'Restaurante Alma Jardín — cocina gourmet en un jardín vivo, inspirada en la naturaleza y el vuelo del colibrí.',
+  description: DEFAULT_DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: [
+    'Alma Jardín',
+    'restaurante',
+    'gourmet',
+    'jardín',
+    'reservas',
+    'menú',
+    'arte',
+    'colibrí',
+  ],
+  authors: [{ name: SITE_NAME }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  formatDetection: {
+    telephone: true,
+    email: true,
+    address: true,
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'es_ES',
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: DEFAULT_DESCRIPTION,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: SITE_NAME,
+    description: DEFAULT_DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
   manifest: '/manifest.webmanifest',
   appleWebApp: {
     capable: true,
-    title: 'Alma Jardín',
+    title: SITE_NAME,
     statusBarStyle: 'default',
   },
   icons: {

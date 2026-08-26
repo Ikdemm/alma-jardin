@@ -1,11 +1,43 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { JsonLd } from '@/components/site/json-ld';
 import { formatPriceCents, whatsappUrl } from '@/lib/format';
 import {
   getPublicSettings,
   getShopProductBySlug,
 } from '@/lib/public-api';
+import { buildPageMetadata, productJsonLd } from '@/lib/seo';
 import styles from '../../site.module.css';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await getShopProductBySlug(slug);
+
+  if (!product) {
+    return buildPageMetadata({
+      title: 'Obra no encontrada',
+      path: `/tienda/${slug}`,
+      noIndex: true,
+    });
+  }
+
+  return buildPageMetadata({
+    title: product.name,
+    description:
+      product.description ||
+      product.story ||
+      `Obra de arte disponible en la tienda de Alma Jardín${
+        product.artistName ? ` — ${product.artistName}` : ''
+      }.`,
+    path: `/tienda/${product.slug}`,
+    imageUrl: product.imageUrls?.[0],
+  });
+}
 
 export default async function ShopProductPage({
   params,
@@ -31,6 +63,7 @@ export default async function ShopProductPage({
 
   return (
     <div className={styles.container}>
+      <JsonLd data={productJsonLd(product)} />
       <section className={styles.pageHero}>
         <Link href="/tienda">← Tienda</Link>
         <p className={styles.eyebrow} style={{ marginTop: '1rem' }}>

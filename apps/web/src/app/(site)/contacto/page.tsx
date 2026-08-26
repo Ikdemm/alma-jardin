@@ -1,5 +1,14 @@
+import type { Metadata } from 'next';
 import { ContactForm } from '@/components/contact/contact-form';
+import { buildPageMetadata } from '@/lib/seo';
 import styles from '../site.module.css';
+
+export const metadata: Metadata = buildPageMetadata({
+  title: 'Contacto',
+  description:
+    'Escríbenos sobre el menú, eventos privados o colaboraciones en Alma Jardín.',
+  path: '/contacto',
+});
 
 export default function ContactoPage() {
   return (

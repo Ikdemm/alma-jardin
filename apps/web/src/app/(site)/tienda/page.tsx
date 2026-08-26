@@ -1,7 +1,16 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { formatPriceCents } from '@/lib/format';
 import { getShopCategories, getShopProducts } from '@/lib/public-api';
+import { buildPageMetadata } from '@/lib/seo';
 import styles from '../site.module.css';
+
+export const metadata: Metadata = buildPageMetadata({
+  title: 'Tienda de arte',
+  description:
+    'Obras de arte inspiradas en la naturaleza, el colibrí y la cocina de Alma Jardín.',
+  path: '/tienda',
+});
 
 export default async function TiendaPage() {
   const [categories, products] = await Promise.all([

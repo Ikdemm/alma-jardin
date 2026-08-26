@@ -1,5 +1,14 @@
+import type { Metadata } from 'next';
 import { BookingForm } from '@/components/reservations/booking-form';
+import { buildPageMetadata } from '@/lib/seo';
 import styles from '../site.module.css';
+
+export const metadata: Metadata = buildPageMetadata({
+  title: 'Reservar mesa',
+  description:
+    'Reserva tu mesa en Alma Jardín. Completa el formulario y te confirmamos disponibilidad.',
+  path: '/reservar',
+});
 
 export default function ReservarPage() {
   return (

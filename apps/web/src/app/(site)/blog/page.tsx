@@ -1,8 +1,17 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { BLOG_CATEGORIES } from '@alma-jardin/shared';
 import { BLOG_CATEGORY_LABELS } from '@/lib/format';
 import { getBlogPosts } from '@/lib/public-api';
+import { buildPageMetadata } from '@/lib/seo';
 import styles from '../site.module.css';
+
+export const metadata: Metadata = buildPageMetadata({
+  title: 'Blog',
+  description:
+    'Historias, recetas, ingredientes y eventos del restaurante Alma Jardín.',
+  path: '/blog',
+});
 
 export default async function BlogPage({
   searchParams,
